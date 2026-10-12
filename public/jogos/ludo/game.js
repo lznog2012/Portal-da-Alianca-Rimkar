@@ -155,7 +155,48 @@ function toggleSound() {
   document.getElementById('soundToggle').innerText = soundEnabled ? '🔊' : '🔇';
 }
 
+// ========== NARRAÇÃO ==========
+function toggleNarration() {
+  const panel = document.getElementById('narrationPanel');
+  if (panel) panel.classList.toggle('open');
+}
 
+function addNarration(data) {
+  const body = document.getElementById('narrationBody');
+  if (!body) return;
+
+  const empty = body.querySelector('.narration-empty');
+  if (empty) empty.remove();
+
+  const el = document.createElement('div');
+  el.className = 'narration-msg' + (data.tipo ? ' ' + data.tipo : '');
+  el.innerHTML = `<span class="narr-icon">${data.icone || '📡'}</span>${data.text}`;
+  body.appendChild(el);
+
+  body.scrollTop = body.scrollHeight;
+
+  while (body.children.length > 50) {
+    body.removeChild(body.firstChild);
+  }
+}
+
+// ========== REAÇÕES ==========
+function sendReaction(emoji) {
+  if (!currentRoom || !socket) return;
+  socket.emit('ludoReaction', { code: currentRoom, emoji });
+}
+
+function showReaction(data) {
+  const el = document.createElement('div');
+  el.className = 'floating-reaction';
+  el.style.left = (20 + Math.random() * 60) + 'vw';
+  el.style.top = (40 + Math.random() * 20) + 'vh';
+  el.style.color = data.playerColor || '#00ff66';
+  el.innerHTML = `${data.emoji}<span class="reaction-name" style="color:${data.playerColor || '#00ff66'}">${data.playerName}</span>`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2600);
+  playBeep(880, 0.08, 'sine', 0.05);
+}
 
 // ========== TOAST ==========
 function showToast(title, message, type) {
@@ -610,14 +651,19 @@ function diceToEmoji(n) {
 }
 
 // ========== RENDER DE CHAT ==========
-function addChatMessage(boxId, sender, text, type) {
+function addChatMessage(boxId, sender, text, type, senderColor) {
   const box = document.getElementById(boxId);
   if (!box) return;
   const el = document.createElement('div');
   el.className = 'chat-msg' + (type ? ' ' + type : '');
-  if (type === 'system') el.innerHTML = `🤖 <b>[SISTEMA]:</b> ${text}`;
-  else if (type === 'alert') el.innerHTML = `⚠️ <b>[ALERTA]:</b> ${text}`;
-  else el.innerHTML = `<b>${sender}:</b> ${text}`;
+  if (type === 'system') {
+    el.innerHTML = `🤖 <b>[SISTEMA]:</b> ${text}`;
+  } else if (type === 'alert') {
+    el.innerHTML = `⚠️ <b>[ALERTA]:</b> ${text}`;
+  } else {
+    const color = senderColor || '#00ff66';
+    el.innerHTML = `<span class="chat-sender" style="color:${color}">${sender}:</span> ${text}`;
+  }
   box.appendChild(el);
   box.scrollTop = box.scrollHeight;
 }
@@ -1217,10 +1263,17 @@ socket.on('reconnected', d => {
 
   socket.on('ludoChat', (data) => {
     const box = document.getElementById('gameView').style.display === 'block' ? 'gameChatBox' : 'lobbyChatBox';
-    addChatMessage(box, data.sender, data.text, data.type);
+    addChatMessage(box, data.sender, data.text, data.type, data.senderColor);
     if (data.type !== 'system' && data.type !== 'alert') SOUNDS.chat();
   });
 
+  socket.on('ludoNarration', (data) => {
+    addNarration(data);
+  });
+
+  socket.on('ludoReaction', (data) => {
+    showReaction(data);
+  });
   socket.on('ludoPlayerLeft', (data) => {
     showToast('👋 SAIU', `${data.playerName} saiu da partida.`, 'zunk');
   });
