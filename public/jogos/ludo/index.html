@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ludo Alienígena - Estação Alpha</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="game.css">
-  <link rel="stylesheet" href="/shared/avatar.css">
 </head>
 <body>
 
@@ -27,7 +29,7 @@
       <div class="narration-empty">Aguardando início da partida...</div>
     </div>
   </aside>
-  
+
   <div class="container">
 
     <!-- ============ TELA 1: SETUP ============ -->
@@ -40,7 +42,7 @@
       <div style="display:grid; grid-template-columns:160px 1fr; gap:20px; align-items:center; margin-top:20px;">
         <div style="text-align:center;">
           <div class="avatar-box" id="avatarPreview"></div>
-          <small style="color:var(--matrix-green);">Seu personagem</small>
+          <small style="color:var(--matrix-green);">Seu Rimk</small>
         </div>
         <div>
           <label>Nome do Tripulante:</label>
@@ -125,7 +127,7 @@
       </div>
 
       <hr style="border-color:#003311; margin:15px 0;">
-      
+
       <div id="colorPickerBox" class="color-picker-box" style="display:none;">
         <h4>🎨 ESCOLHA SUA COR</h4>
         <div id="colorPickerGrid" class="color-picker-grid"></div>
@@ -150,7 +152,7 @@
       <p id="readyHint" style="text-align:center; color:#888; font-size:0.85em; margin-top:8px; font-style:italic;"></p>
     </div>
 
-        <!-- ============ TELA 3: JOGO ============ -->
+    <!-- ============ TELA 3: JOGO ============ -->
     <div id="gameView" style="display:none;">
       <div class="game-top-bar">
         <div class="turn-info">
@@ -191,8 +193,7 @@
             </div>
           </div>
         </div>
-       </div>
-    </div>
+      </div>
     </div>
 
     <!-- ============ TELA 4: FIM DE JOGO ============ -->
@@ -206,9 +207,6 @@
     </div>
 
   </div>
-
-  <!-- ALERTA DE CAPTURA (banner vermelho) -->
-  <div id="captureAlert" class="capture-alert"></div>
 
   <!-- ALERTA DE CAPTURA (banner vermelho, auto-desaparece) -->
   <div id="captureAlert" class="capture-alert"></div>
@@ -242,9 +240,6 @@
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/shared/avatar.js"></script>
-  <script src="/shared/conta.js"></script>
   <script src="game.js"></script>
 </body>
 </html>
