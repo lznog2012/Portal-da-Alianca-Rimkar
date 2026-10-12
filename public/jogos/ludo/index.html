@@ -18,7 +18,7 @@
   <button id="narrationToggle" class="narration-toggle" onclick="toggleNarration()" title="Narração da Estação">📡</button>
 
   <!-- PAINEL DE NARRAÇÃO -->
-  <aside id="narrationPanel" class="narration-panel open">
+  <aside id="narrationPanel" class="narration-panel">
     <div class="narration-header">
       <span>📡 NARRAÇÃO DA ESTAÇÃO</span>
       <button class="narration-close" onclick="toggleNarration()">✕</button>
@@ -27,7 +27,7 @@
       <div class="narration-empty">Aguardando início da partida...</div>
     </div>
   </aside>
-  
+
   <div class="container">
 
     <!-- ============ TELA 1: SETUP ============ -->
@@ -125,7 +125,7 @@
       </div>
 
       <hr style="border-color:#003311; margin:15px 0;">
-      
+
       <div id="colorPickerBox" class="color-picker-box" style="display:none;">
         <h4>🎨 ESCOLHA SUA COR</h4>
         <div id="colorPickerGrid" class="color-picker-grid"></div>
@@ -150,7 +150,7 @@
       <p id="readyHint" style="text-align:center; color:#888; font-size:0.85em; margin-top:8px; font-style:italic;"></p>
     </div>
 
-        <!-- ============ TELA 3: JOGO ============ -->
+    <!-- ============ TELA 3: JOGO ============ -->
     <div id="gameView" style="display:none;">
       <div class="game-top-bar">
         <div class="turn-info">
@@ -191,8 +191,19 @@
             </div>
           </div>
         </div>
-       </div>
-    </div>
+      </div>
+
+      <!-- BARRA DE REAÇÕES -->
+      <div class="reactions-bar" id="reactionsBar">
+        <button class="reaction-btn" onclick="sendReaction('😂')" title="Rir">😂</button>
+        <button class="reaction-btn" onclick="sendReaction('😠')" title="Bravo">😠</button>
+        <button class="reaction-btn" onclick="sendReaction('😭')" title="Chorar">😭</button>
+        <button class="reaction-btn" onclick="sendReaction('😎')" title="Confiante">😎</button>
+        <button class="reaction-btn" onclick="sendReaction('🤔')" title="Pensando">🤔</button>
+        <button class="reaction-btn" onclick="sendReaction('🎉')" title="Comemorar">🎉</button>
+        <button class="reaction-btn" onclick="sendReaction('💀')" title="Morri">💀</button>
+        <button class="reaction-btn" onclick="sendReaction('🔥')" title="Top">🔥</button>
+      </div>
     </div>
 
     <!-- ============ TELA 4: FIM DE JOGO ============ -->
@@ -207,10 +218,7 @@
 
   </div>
 
-  <!-- ALERTA DE CAPTURA (banner vermelho) -->
-  <div id="captureAlert" class="capture-alert"></div>
-
-  <!-- ALERTA DE CAPTURA (banner vermelho, auto-desaparece) -->
+  <!-- ALERTA DE CAPTURA -->
   <div id="captureAlert" class="capture-alert"></div>
 
   <!-- MODAL DE VOTAÇÃO DE PAUSA -->
