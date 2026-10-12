@@ -762,6 +762,22 @@ function init(io, rooms, broadcastStats) {
       room.pauseVotes[socket.id] = !!vote;
       checkPauseVote(room, code);
     });
+
+    socket.on('ludoReaction', ({ code, emoji }) => {
+      const room = rooms[code];
+      if (!room) return;
+      const p = room.players[socket.id];
+      if (!p || p.eliminated) return;
+      const allowed = ['😂', '😠', '😭', '😎', '🤔', '🎉', '💀', '🔥'];
+      if (!allowed.includes(emoji)) return;
+      io.to(code).emit('ludoReaction', {
+        playerId: socket.id,
+        playerName: p.name,
+        playerColor: p.color || '#00ff66',
+        emoji: emoji,
+        timestamp: Date.now()
+      });
+    });
     
     socket.on('ludoLeave', ({ code }) => {
       const room = rooms[code];
