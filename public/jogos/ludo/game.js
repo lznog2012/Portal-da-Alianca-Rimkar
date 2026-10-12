@@ -81,13 +81,8 @@ const CLIENT_ID = getClientId();
 
 function getStoredName() { return localStorage.getItem(STORAGE.name) || ''; }
 function getStoredAvatar() {
-  try {
-    const avatar = JSON.parse(localStorage.getItem(STORAGE.avatar) || '{}');
-    const race = localStorage.getItem('alpha_race') || 'Rimk';
-    return { ...avatar, race };
-  } catch (e) {
-    return { race: 'Rimk' };
-  }
+  // O personagem do jogo é o avatar criado na conta (camadas do RimkAvatar).
+  return (window.Conta && Conta.gameAvatar && Conta.gameAvatar()) || { b: 'rimk', bg: null, i: [] };
 }
 function saveProfile(name) {
   if (name) localStorage.setItem(STORAGE.name, name);
@@ -135,17 +130,17 @@ const SOUNDS = {
   move: () => playBeep(700, 0.08, 'sine', 0.05),
   capture: () => playSequence([[300, 0.1, 'sawtooth'], [200, 0.15, 'sawtooth'], [100, 0.3, 'square']]),
   abduction: () => playSequence([
-    [80,  0.30, 'sawtooth', 0.09],
-    [110, 0.22, 'sawtooth', 0.08],
-    [180, 0.18, 'square',   0.07],
-    [350, 0.14, 'square',   0.07],
-    [600, 0.12, 'square',   0.07],
-    [1000, 0.10, 'sine',    0.06],
-    [1500, 0.10, 'sine',    0.06],
-    [2200, 0.12, 'sine',    0.05],
-    [2800, 0.18, 'triangle',0.05],
-    [1800, 0.12, 'sine',    0.04],
-    [900,  0.18, 'sine',    0.04]
+    [80,  0.30, 'sawtooth', 0.09],   // rumble grave
+    [110, 0.22, 'sawtooth', 0.08],   // rumble
+    [180, 0.18, 'square',   0.07],   // feixe começa
+    [350, 0.14, 'square',   0.07],   // sweep
+    [600, 0.12, 'square',   0.07],   // sweep
+    [1000, 0.10, 'sine',    0.06],   // sweep
+    [1500, 0.10, 'sine',    0.06],   // pico
+    [2200, 0.12, 'sine',    0.05],   // pico
+    [2800, 0.18, 'triangle',0.05],   // chegada
+    [1800, 0.12, 'sine',    0.04],   // settle
+    [900,  0.18, 'sine',    0.04]    // settle
   ]),
   turn: () => playSequence([[600, 0.08], [800, 0.12]]),
   win: () => playSequence([[523, 0.15], [659, 0.15], [784, 0.15], [1047, 0.5]]),
@@ -159,6 +154,8 @@ function toggleSound() {
   localStorage.setItem(STORAGE.sound, soundEnabled);
   document.getElementById('soundToggle').innerText = soundEnabled ? '🔊' : '🔇';
 }
+
+
 
 // ========== TOAST ==========
 function showToast(title, message, type) {
@@ -200,6 +197,8 @@ function selectMode(mode) {
 function generateAvatarHTML(c, opts) {
   if (!c) c = {};
   if (!opts) opts = {};
+  const layered = window.RimkAvatar && window.RimkAvatar.html(c);
+  if (layered) return `<div style="position:relative;width:100%;height:100%;border-radius:inherit;overflow:hidden;">${layered}</div>`;
 
   const raceFile = RACE_FILES[c.race] || RACE_FILES['Rimk'];
 
@@ -233,8 +232,10 @@ function buildBoard() {
   const board = document.getElementById('ludoBoard');
   if (!board) return;
 
+  // Remove células antigas, mas MANTÉM peões existentes
   board.querySelectorAll('.cell, .center-overlay').forEach(c => c.remove());
 
+  // Define a imagem de fundo correta conforme o modo
   const mode = roomState?.mode || selectedMode;
   const boardImg = mode === 'B' ? 'art/board-B.png' : 'art/board-A.png';
   board.style.backgroundImage = `url('${boardImg}')`;
@@ -280,25 +281,29 @@ function getCellCenter(row, col) {
 }
 
 function getCenterQuadrantPos(playerIndex, pawnIdx) {
-  const baseDist = 42;
-  const apexDist = 46;
-  const center = 50;
-  const spread = 5;
+  // Cada jogador ocupa UM triângulo do X central.
+  // Layout: 3 peões na fileira da base + 1 peão mais perto do ápice (centro).
+  const baseDist = 42;   // distância da borda até a fileira da base
+  const apexDist = 46;   // distância da borda até o peão do ápice
+  const center = 50;     // centro do eixo
+  const spread = 5;      // espaçamento entre os 3 peões da base
 
   if (pawnIdx < 3) {
-    const offset = (pawnIdx - 1) * spread;
+    // 3 peões na fileira da base (em linha)
+    const offset = (pawnIdx - 1) * spread;  // -5, 0, +5
     switch (playerIndex) {
-      case 0: return { left: baseDist,           top: center + offset };
-      case 1: return { left: center + offset,    top: baseDist };
-      case 2: return { left: 100 - baseDist,     top: center + offset };
-      case 3: return { left: center + offset,    top: 100 - baseDist };
+      case 0: return { left: baseDist,           top: center + offset };  // ESQUERDA
+      case 1: return { left: center + offset,    top: baseDist };         // TOPO
+      case 2: return { left: 100 - baseDist,     top: center + offset };  // DIREITA
+      case 3: return { left: center + offset,    top: 100 - baseDist };   // BASE
     }
   } else {
+    // 1 peão próximo ao ápice (centro)
     switch (playerIndex) {
-      case 0: return { left: apexDist,           top: center };
-      case 1: return { left: center,             top: apexDist };
-      case 2: return { left: 100 - apexDist,     top: center };
-      case 3: return { left: center,             top: 100 - apexDist };
+      case 0: return { left: apexDist,           top: center };  // ESQUERDA
+      case 1: return { left: center,             top: apexDist }; // TOPO
+      case 2: return { left: 100 - apexDist,     top: center };  // DIREITA
+      case 3: return { left: center,             top: 100 - apexDist }; // BASE
     }
   }
   return { left: 50, top: 50 };
@@ -326,6 +331,7 @@ function renderPawns() {
     });
   });
 
+  // Remove peões obsoletos
   Object.keys(pawnElements).forEach(key => {
     if (!desired[key]) {
       pawnElements[key].el.remove();
@@ -333,6 +339,7 @@ function renderPawns() {
     }
   });
 
+  // Cria / atualiza
   Object.entries(desired).forEach(([key, data]) => {
     let entry = pawnElements[key];
     const pawnFile = PAWN_FILES[data.colorName] || 'rimk.png';
@@ -361,6 +368,7 @@ function renderPawns() {
       entry.pawnIdx = data.pawnIdx;
     }
 
+    // Movable?
     const isMyPawn = data.playerId === myId;
     const isMyTurn = roomState.currentTurnId === myId;
     const dice = roomState.dice;
@@ -393,6 +401,7 @@ function layoutAllPawns() {
 
     const pos = entry.pos;
 
+    // Peão que chegou ao centro
     if (pos === 56) {
       const c = getCenterQuadrantPos(entry.playerIndex, entry.pawnIdx);
       entry.el.style.left = c.left + '%';
@@ -457,6 +466,7 @@ function animatePawn(entry, from, to) {
 
   entry.animating = true;
 
+  // Teleporte (base → anel, captura, etc)
   if (from === -1 || to === -1 || to < from) {
     entry.animating = false;
     setTimeout(() => layoutAllPawns(), 30);
@@ -497,36 +507,13 @@ function animatePawn(entry, from, to) {
   step();
 }
 
-// ========== NARRAÇÃO ==========
-function toggleNarration() {
-  const panel = document.getElementById('narrationPanel');
-  if (panel) panel.classList.toggle('open');
-}
-
-function addNarration(data) {
-  const body = document.getElementById('narrationBody');
-  if (!body) return;
-
-  const empty = body.querySelector('.narration-empty');
-  if (empty) empty.remove();
-
-  const el = document.createElement('div');
-  el.className = 'narration-msg' + (data.tipo ? ' ' + data.tipo : '');
-  el.innerHTML = `<span class="narr-icon">${data.icone || '📡'}</span>${data.text}`;
-  body.appendChild(el);
-
-  body.scrollTop = body.scrollHeight;
-
-  while (body.children.length > 50) {
-    body.removeChild(body.firstChild);
-  }
-}
 // ========== RENDER DA LISTA DE JOGADORES ==========
 function renderPlayersList() {
   const el = document.getElementById('playersList');
   if (!el || !roomState) return;
   const colors = getColorsForMode();
 
+  // Descobre meu time
   const me = roomState.players.find(p => p.id === myId);
   const myTeam = me?.team || null;
 
@@ -535,6 +522,7 @@ function renderPlayersList() {
     const finished = p.pawns.filter(x => x === FINISH_POS).length;
     const isCurrent = p.id === roomState.currentTurnId;
     const isMe = p.id === myId;
+    // ⚡ Marca como aliado se for do mesmo time (e não for eu)
     const isAlly = !isMe && myTeam && p.team === myTeam;
 
     let cls = 'player-row';
@@ -622,19 +610,14 @@ function diceToEmoji(n) {
 }
 
 // ========== RENDER DE CHAT ==========
-function addChatMessage(boxId, sender, text, type, senderColor) {
+function addChatMessage(boxId, sender, text, type) {
   const box = document.getElementById(boxId);
   if (!box) return;
   const el = document.createElement('div');
   el.className = 'chat-msg' + (type ? ' ' + type : '');
-  if (type === 'system') {
-    el.innerHTML = `🤖 <b>[SISTEMA]:</b> ${text}`;
-  } else if (type === 'alert') {
-    el.innerHTML = `⚠️ <b>[ALERTA]:</b> ${text}`;
-  } else {
-    const color = senderColor || '#99ff00';
-    el.innerHTML = `<span class="chat-sender" style="color:${color}">${sender}:</span> ${text}`;
-  }
+  if (type === 'system') el.innerHTML = `🤖 <b>[SISTEMA]:</b> ${text}`;
+  else if (type === 'alert') el.innerHTML = `⚠️ <b>[ALERTA]:</b> ${text}`;
+  else el.innerHTML = `<b>${sender}:</b> ${text}`;
   box.appendChild(el);
   box.scrollTop = box.scrollHeight;
 }
@@ -826,7 +809,7 @@ function backToLobby() {
 }
 
 function spawnConfetti() {
-  const colors = ['#ccff66', '#99ff00', '#aaff33', '#ff3366', '#aa66ff'];
+  const colors = ['#ffcc00', '#00ff66', '#00ffff', '#ff3366', '#aa66ff'];
   for (let i = 0; i < 60; i++) {
     const c = document.createElement('div');
     c.className = 'confetti';
@@ -874,6 +857,7 @@ function startAbductionAnimation(entry) {
   const left = el.style.left;
   const top = el.style.top;
 
+  // Criar nave alienígena
   const ship = document.createElement('div');
   ship.className = 'abduction-ship';
   ship.textContent = '🛸';
@@ -881,11 +865,19 @@ function startAbductionAnimation(entry) {
   ship.style.top = top;
   board.appendChild(ship);
 
+  // Criar feixe de luz
   const beam = document.createElement('div');
   beam.className = 'abduction-beam';
   beam.style.left = left;
   beam.style.top = top;
   board.appendChild(beam);
+
+  // Timeline:
+  // 0ms    → nave descendo
+  // 600ms  → feixe ativa + peão começa a subir
+  // 1800ms → nave sobe, peão teleporta pra base
+  // 1900ms → peão materializa na base
+  // 2800ms → limpeza
 
   setTimeout(() => {
     beam.classList.add('active');
@@ -927,19 +919,18 @@ if (socket) {
     socket.emit('identify', { clientId: CLIENT_ID });
   });
 
-  socket.on('reconnected', d => {
+socket.on('reconnected', d => {
     document.getElementById('setupView').style.display = 'block';
     document.getElementById('lobbyView').style.display = 'none';
     document.getElementById('gameView').style.display = 'none';
     document.getElementById('endView').style.display = 'none';
-  });
-
+});
+  
   socket.on('errorMsg', (msg) => showToast('⚠️ ERRO', msg, 'zunk'));
-
   socket.on('ludoRoomsList', (data) => {
     renderLudoRoomsList(data.rooms);
   });
-
+  
   socket.on('ludoJoined', (data) => {
     currentRoom = data.code;
     document.getElementById('setupView').style.display = 'none';
@@ -972,11 +963,7 @@ if (socket) {
       showToast('❌ RECUSADO', `Votação não aprovada (${data.yes} sim / ${data.no} não).`, 'zunk');
     }
   });
-
-  socket.on('ludoNarration', (data) => {
-    addNarration(data);
-  });
-
+  
   socket.on('ludoLobby', (data) => {
     const colors = data.mode === 'B'
       ? [
@@ -998,6 +985,7 @@ if (socket) {
     document.getElementById('queueCount').innerText = data.players.length + ' / ' + data.maxPlayers;
     document.getElementById('displayMode').innerText = data.mode === 'B' ? '2 vs 2' : 'FREE-FOR-ALL';
 
+    // ========== RENDER COLOR PICKER ==========
     const pickerBox = document.getElementById('colorPickerBox');
     const pickerGrid = document.getElementById('colorPickerGrid');
     if (pickerBox && pickerGrid) {
@@ -1037,6 +1025,7 @@ if (socket) {
       }).join('');
     }
 
+    // ========== RENDER LOBBY GRID ==========
     const grid = document.getElementById('lobbyGrid');
     grid.innerHTML = data.players.map(p => {
       const isMe = p.id === myId;
@@ -1071,6 +1060,7 @@ if (socket) {
       `;
     }).join('');
 
+    // ========== BOTÕES DE BOT ==========
     const hasBots = data.players.some(p => p.isBot);
     const btnAddBot = document.getElementById('btnAddLudoBot');
     const btnRemoveBot = document.getElementById('btnRemoveLudoBot');
@@ -1082,6 +1072,7 @@ if (socket) {
       btnRemoveBot.style.display = (isHostForBot && hasBots) ? 'block' : 'none';
     }
 
+    // ========== BOTÕES DE READY/START ==========
     const isHost = me && me.isHost;
     const btnReady = document.getElementById('btnReady');
     const btnStart = document.getElementById('btnStartLudo');
@@ -1098,6 +1089,7 @@ if (socket) {
     const isModeB = data.mode === 'B';
     const modeBValid = !isModeB || numPlayers === 2 || numPlayers === 4;
 
+    // Verifica times no modo B
     let teamsOk = true;
     if (isModeB && allPickedColor) {
       const rimk = data.players.filter(p => p.team === 'RIMK').length;
@@ -1113,6 +1105,7 @@ if (socket) {
       btnStart.style.display = 'none';
     }
 
+    // ========== HINT ==========
     if (numPlayers < 2) {
       hint.innerText = 'Aguardando pelo menos 1 jogador entrar...';
       hint.style.color = '';
@@ -1139,9 +1132,6 @@ if (socket) {
   });
 
   socket.on('ludoStarted', (state) => {
-    const narrBody = document.getElementById('narrationBody');
-    if (narrBody) narrBody.innerHTML = '';
-
     roomState = state;
     document.getElementById('setupView').style.display = 'none';
     document.getElementById('lobbyView').style.display = 'none';
@@ -1175,6 +1165,7 @@ if (socket) {
       SOUNDS.turn();
     }
 
+    // Sincroniza overlay de pausa
     if (state.state === 'PLAYING' && state.isPaused) {
       showPausedOverlay();
     } else {
@@ -1206,21 +1197,27 @@ if (socket) {
     if (!data.captured || !data.captured.length) return;
 
     SOUNDS.abduction();
+
+    // Mostra banner vermelho
     showCaptureAlert(data.attackerName, data.captured);
 
+    // Anima cada peão capturado
     data.captured.forEach(c => {
       const key = `${c.playerId}#${c.pawnIndex}`;
       const entry = pawnElements[key];
       if (!entry) return;
 
+      // Trava a posição atual do peão (impede renderPawns de movê-lo)
       entry.animating = true;
+
+      // Inicia animação de abdução
       startAbductionAnimation(entry);
     });
   });
 
   socket.on('ludoChat', (data) => {
     const box = document.getElementById('gameView').style.display === 'block' ? 'gameChatBox' : 'lobbyChatBox';
-    addChatMessage(box, data.sender, data.text, data.type, data.senderColor);
+    addChatMessage(box, data.sender, data.text, data.type);
     if (data.type !== 'system' && data.type !== 'alert') SOUNDS.chat();
   });
 
