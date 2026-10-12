@@ -54,7 +54,7 @@ function init(io, rooms, broadcastStats) {
     }
     return -1;
   }
-  
+
   function pickBotMove(player, dice) {
     const valid = [];
     player.pawns.forEach((pos, idx) => {
@@ -210,7 +210,7 @@ function init(io, rooms, broadcastStats) {
       nextTurn(room);
     }
   }
-  
+
   // ========== HELPERS ==========
   function rollDice() { return Math.floor(Math.random() * 6) + 1; }
 
@@ -229,6 +229,16 @@ function init(io, rooms, broadcastStats) {
 
   function getRingIndex(playerIndex, relativePos) {
     return (START_INDICES[playerIndex] + relativePos) % 52;
+  }
+
+  // ========== NARRAÇÃO ==========
+  function narrate(room, text, icone, tipo) {
+    io.to(room.code).emit('ludoNarration', {
+      text,
+      icone: icone || '📡',
+      tipo: tipo || 'info',
+      timestamp: Date.now()
+    });
   }
 
   // ========== ROOM MANAGEMENT ==========
@@ -380,23 +390,23 @@ function init(io, rooms, broadcastStats) {
   function checkWin(room) {
     if (room.mode === 'A') {
       const winner = Object.values(room.players).find(p => p.finished);
-      if (winner) { 
+      if (winner) {
         narrate(room, `🏆 ${winner.name} venceu a partida!`, '🏆', 'win');
-        endGame(room, [winner.id]); 
-        return true; 
+        endGame(room, [winner.id]);
+        return true;
       }
     } else {
       const rimk = Object.values(room.players).filter(p => p.team === 'RIMK');
       const zunk = Object.values(room.players).filter(p => p.team === 'ZUNK');
-      if (rimk.length && rimk.every(p => p.finished)) { 
+      if (rimk.length && rimk.every(p => p.finished)) {
         narrate(room, `🏆 Time RIMK venceu a partida!`, '🏆', 'win');
-        endGame(room, rimk.map(p => p.id)); 
-        return true; 
+        endGame(room, rimk.map(p => p.id));
+        return true;
       }
-      if (zunk.length && zunk.every(p => p.finished)) { 
+      if (zunk.length && zunk.every(p => p.finished)) {
         narrate(room, `🏆 Time ZUNK venceu a partida!`, '🏆', 'win');
-        endGame(room, zunk.map(p => p.id)); 
-        return true; 
+        endGame(room, zunk.map(p => p.id));
+        return true;
       }
     }
     return false;
@@ -445,6 +455,7 @@ function init(io, rooms, broadcastStats) {
         text: `⚠ ${p.name} foi desclassificado.`,
         type: 'system'
       });
+      narrate(room, `${p.name} foi desclassificado.`, '⚠️', 'warn');
 
       const activePlayers = Object.values(room.players).filter(pl => !pl.eliminated);
       if (activePlayers.length <= 1) {
@@ -461,15 +472,6 @@ function init(io, rooms, broadcastStats) {
     io.to(room.code).emit('ludoPlayerLeft', { playerId, playerName: p.name });
   }
 
-  function narrate(room, text, icone, tipo) {
-    io.to(room.code).emit('ludoNarration', {
-      text,
-      icone: icone || '📡',
-      tipo: tipo || 'info',
-      timestamp: Date.now()
-    });
-  }
-  
   function checkPauseVote(room, code) {
     if (!room.pauseVotes) return;
     const alive = Object.values(room.players).filter(pl => !pl.eliminated);
@@ -490,9 +492,13 @@ function init(io, rooms, broadcastStats) {
       room.isPaused = room.pauseTarget;
       if (room.isPaused) {
         clearInterval(room.turnTimer);
+        narrate(room, `Jogo pausado por votação.`, '⏸', 'warn');
       } else {
         startTurnTimer(room, true);
+        narrate(room, `Jogo retomado.`, '▶', 'info');
       }
+    } else {
+      narrate(room, `Votação de pausa recusada.`, '❌', 'info');
     }
 
     io.to(code).emit('ludoPauseVoteResult', {
@@ -508,7 +514,7 @@ function init(io, rooms, broadcastStats) {
     room.pauseTarget = null;
     broadcastState(room);
   }
-  
+
   // ========== SOCKET HANDLERS ==========
   io.on('connection', (socket) => {
 
@@ -522,7 +528,6 @@ function init(io, rooms, broadcastStats) {
 
       const limit = Math.min(Math.max(parseInt(maxPlayers) || 4, 2), 4);
       const m = mode === 'B' ? 'B' : 'A';
-      const colors = getColors(m);
 
       rooms[code] = makeRoom(code, socket.id, m, limit);
       rooms[code].players[socket.id] = {
@@ -532,7 +537,7 @@ function init(io, rooms, broadcastStats) {
         pawns: [-1, -1, -1, -1], finished: false, eliminated: false
       };
       rooms[code].turnOrder = [socket.id];
-      
+
       socket.join(code);
       socket.currentRoom = code;
       socket.emit('ludoJoined', { code, isHost: true });
@@ -554,7 +559,7 @@ function init(io, rooms, broadcastStats) {
         .sort((a, b) => b.currentPlayers - a.currentPlayers);
       socket.emit('ludoRoomsList', { rooms: list });
     });
-    
+
     socket.on('ludoJoin', ({ name, avatar, code }) => {
       const room = rooms[code];
       if (!room || room.gameType !== 'L') return socket.emit('errorMsg', 'Sala não encontrada.');
@@ -606,7 +611,7 @@ function init(io, rooms, broadcastStats) {
 
       broadcastLobby(room);
     });
-    
+
     socket.on('ludoAddBot', ({ code }) => {
       const room = rooms[code];
       if (!room || room.hostId !== socket.id) return;
@@ -640,7 +645,7 @@ function init(io, rooms, broadcastStats) {
       room.turnOrder = room.turnOrder.filter(id => id !== botId);
       broadcastLobby(room);
     });
-    
+
     socket.on('ludoStart', ({ code }) => {
       const room = rooms[code];
       if (!room || room.hostId !== socket.id) return;
@@ -705,11 +710,11 @@ function init(io, rooms, broadcastStats) {
       if (!room) return;
       const p = room.players[socket.id];
       if (!p || !text?.trim()) return;
-      io.to(code).emit('ludoChat', { 
-        sender: p.name, 
+      io.to(code).emit('ludoChat', {
+        sender: p.name,
         senderColor: p.color || '#00ff66',
-        text: text.trim(), 
-        type: 'normal' 
+        text: text.trim(),
+        type: 'normal'
       });
     });
 
@@ -762,7 +767,7 @@ function init(io, rooms, broadcastStats) {
       room.pauseVotes[socket.id] = !!vote;
       checkPauseVote(room, code);
     });
-    
+
     socket.on('ludoLeave', ({ code }) => {
       const room = rooms[code];
       if (!room) return;
