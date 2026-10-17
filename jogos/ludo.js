@@ -5,14 +5,14 @@
 const COLORS_A = [
   { name: 'Rimk',   hex: '#aaff00', dark: '#557700', planet: 'Rimkópolis' },
   { name: 'Sahrin', hex: '#ffcc00', dark: '#886600', planet: 'Kaal-7'      },
-  { name: 'Nereid', hex: '#00ffcc', dark: '#006655', planet: 'Nereida'     },
+  { name: 'Nereid', hex: '#33ff00', dark: '#116600', planet: 'Nereida'     },
   { name: 'Ferrum', hex: '#ff3344', dark: '#881122', planet: 'Marte'       }
 ];
 
 const COLORS_B = [
   { name: 'Rimk',   hex: '#aaff00', dark: '#557700', team: 'RIMK', planet: 'Rimkópolis' },
   { name: 'Thrakk', hex: '#f0f0ff', dark: '#8888aa', team: 'ZUNK', planet: "Zunk'nir"    },
-  { name: 'Nereid', hex: '#00ffcc', dark: '#006655', team: 'RIMK', planet: 'Nereida'     },
+  { name: 'Nereid', hex: '#33ff00', dark: '#116600', team: 'RIMK', planet: 'Nereida'     },
   { name: 'Vharn',  hex: '#aa66ff', dark: '#553388', team: 'ZUNK', planet: "Zunk'nir"    }
 ];
 
@@ -779,7 +779,7 @@ function init(io, rooms, broadcastStats) {
       if (!p || !text?.trim()) return;
       io.to(code).emit('ludoChat', {
         sender: p.name,
-        senderColor: p.color || '#00ff66',
+        senderColor: p.color || '#99ff00',
         text: String(text).replace(/[<>]/g, '').trim().slice(0, 200),
         type: 'normal'
       });
@@ -795,7 +795,7 @@ function init(io, rooms, broadcastStats) {
       io.to(code).emit('ludoReaction', {
         playerId: socket.id,
         playerName: p.name,
-        playerColor: p.color || '#00ff66',
+        playerColor: p.color || '#99ff00',
         emoji: emoji,
         timestamp: Date.now()
       });
