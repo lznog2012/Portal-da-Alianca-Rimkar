@@ -200,8 +200,8 @@ function showReaction(data) {
   el.className = 'floating-reaction';
   el.style.left = (20 + Math.random() * 60) + 'vw';
   el.style.top = (40 + Math.random() * 20) + 'vh';
-  el.style.color = data.playerColor || '#00ff66';
-  el.innerHTML = `${data.emoji}<span class="reaction-name" style="color:${data.playerColor || '#00ff66'}">${data.playerName}</span>`;
+  el.style.color = data.playerColor || '#99ff00';
+  el.innerHTML = `${data.emoji}<span class="reaction-name" style="color:${data.playerColor || '#99ff00'}">${data.playerName}</span>`;
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 2600);
   playBeep(880, 0.08, 'sine', 0.05);
@@ -300,14 +300,14 @@ function getColorsForMode() {
     return [
       { name: 'Rimk',   hex: '#aaff00', dark: '#557700', team: 'RIMK', planet: 'Rimkópolis' },
       { name: 'Thrakk', hex: '#f0f0ff', dark: '#8888aa', team: 'ZUNK', planet: "Zunk'nir"    },
-      { name: 'Nereid', hex: '#00ffcc', dark: '#006655', team: 'RIMK', planet: 'Nereida'     },
+      { name: 'Nereid', hex: '#33ff00', dark: '#116600', team: 'RIMK', planet: 'Nereida'     },
       { name: 'Vharn',  hex: '#aa66ff', dark: '#553388', team: 'ZUNK', planet: "Zunk'nir"    }
     ];
   }
   return [
     { name: 'Rimk',   hex: '#aaff00', dark: '#557700', planet: 'Rimkópolis' },
     { name: 'Sahrin', hex: '#ffcc00', dark: '#886600', planet: 'Kaal-7'      },
-    { name: 'Nereid', hex: '#00ffcc', dark: '#006655', planet: 'Nereida'     },
+    { name: 'Nereid', hex: '#33ff00', dark: '#116600', planet: 'Nereida'     },
     { name: 'Ferrum', hex: '#ff3344', dark: '#881122', planet: 'Marte'       }
   ];
 }
@@ -670,7 +670,7 @@ function addChatMessage(boxId, sender, text, type, senderColor) {
   } else if (type === 'alert') {
     el.innerHTML = `⚠️ <b>[ALERTA]:</b> ${text}`;
   } else {
-    const color = senderColor || '#00ff66';
+    const color = senderColor || '#99ff00';
     el.innerHTML = `<span class="chat-sender" style="color:${color}">${sender}:</span> ${text}`;
   }
   box.appendChild(el);
@@ -885,7 +885,7 @@ function backToLobby() {
 }
 
 function spawnConfetti() {
-  const colors = ['#ffcc00', '#00ff66', '#00ffff', '#ff3366', '#aa66ff'];
+  const colors = ['#ffcc00', '#99ff00', '#00ffff', '#ff3366', '#aa66ff'];
   for (let i = 0; i < 60; i++) {
     const c = document.createElement('div');
     c.className = 'confetti';
@@ -1068,13 +1068,13 @@ if (socket) {
       ? [
           {hex:'#aaff00', name:'Rimk',   team:'RIMK'},
           {hex:'#f0f0ff', name:'Thrakk', team:'ZUNK'},
-          {hex:'#00ffcc', name:'Nereid', team:'RIMK'},
+          {hex:'#33ff00', name:'Nereid', team:'RIMK'},
           {hex:'#aa66ff', name:'Vharn',  team:'ZUNK'}
         ]
       : [
           {hex:'#aaff00', name:'Rimk'},
           {hex:'#ffcc00', name:'Sahrin'},
-          {hex:'#00ffcc', name:'Nereid'},
+          {hex:'#33ff00', name:'Nereid'},
           {hex:'#ff3344', name:'Ferrum'}
         ];
 
