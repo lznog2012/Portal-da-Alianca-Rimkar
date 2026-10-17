@@ -495,9 +495,87 @@ function init(io, rooms, broadcastStats) {
   }
 
   // ========== SOCKET HANDLERS ==========
+  // Limpa o apelido (os nomes vão parar em innerHTML no cliente).
+  function cleanName(n) {
+    return String(n == null ? '' : n).replace(/[<>&"'`]/g, '').replace(/\s+/g, ' ').trim().slice(0, 16);
+  }
+
+  // Tira o jogador de qualquer sala de Ludo em que ele já esteja (evita sala "fantasma"
+  // quando a pessoa recarrega a página / cria outra sala / a conexão cai e volta).
+  function leaveStaleLudoRooms(socket, clientId) {
+    for (const code of Object.keys(rooms)) {
+      const room = rooms[code];
+      if (!room || room.gameType !== 'L' || room.state !== 'LOBBY') continue;
+      for (const pid of Object.keys(room.players)) {
+        const pl = room.players[pid];
+        if (pl.isBot) continue;
+        const sameSocket = pid === socket.id;
+        const sameClient = clientId && pl.clientId === clientId;
+        const oldSocketGone = !io.sockets.sockets.get(pid);
+        if (sameSocket || (sameClient && (pl.disconnected || oldSocketGone))) {
+          try { socket.leave(code); } catch (e) {}
+          handleLeave(room, pid);
+        }
+      }
+    }
+  }
+
+  // Reconecta o jogador (mesmo clientId) numa sala de Ludo trocando o socket.id antigo pelo novo.
+  function tryReconnect(socket, clientId) {
+    if (!clientId) return false;
+    for (const code of Object.keys(rooms)) {
+      const room = rooms[code];
+      if (!room || room.gameType !== 'L') continue;
+      if (room.state === 'END') continue;
+      const oldId = Object.keys(room.players).find(pid => {
+        const pl = room.players[pid];
+        return !pl.isBot && pl.clientId === clientId && pid !== socket.id &&
+               (pl.disconnected || !io.sockets.sockets.get(pid));
+      });
+      if (!oldId) continue;
+
+      if (room.disconnectTimers[oldId]) {
+        clearTimeout(room.disconnectTimers[oldId]);
+        delete room.disconnectTimers[oldId];
+      }
+      const pl = room.players[oldId];
+      delete room.players[oldId];
+      pl.id = socket.id;
+      pl.disconnected = false;
+      room.players[socket.id] = pl;
+      room.turnOrder = room.turnOrder.map(id => id === oldId ? socket.id : id);
+      if (room.hostId === oldId) room.hostId = socket.id;
+      if (room.pauseVotes && room.pauseVotes[oldId] !== undefined) {
+        room.pauseVotes[socket.id] = room.pauseVotes[oldId];
+        delete room.pauseVotes[oldId];
+      }
+
+      socket.join(code);
+      socket.currentRoom = code;
+      socket.emit('ludoReconnected', { code, isHost: room.hostId === socket.id, state: room.state, mode: room.mode });
+      if (room.state === 'LOBBY') broadcastLobby(room);
+      else broadcastState(room);
+      return true;
+    }
+    return false;
+  }
+
   io.on('connection', (socket) => {
 
-    socket.on('ludoCreate', ({ name, avatar, mode, maxPlayers }) => {
+    // O cliente do Ludo avisa quem é (clientId) assim que conecta; se ele já estava
+    // numa sala (queda de rede, app em segundo plano no celular...), volta pra ela.
+    socket.on('ludoIdentify', ({ clientId } = {}) => {
+      if (typeof clientId !== 'string' || !clientId) return;
+      socket.clientId = clientId;
+      if (!tryReconnect(socket, clientId)) socket.emit('ludoNoSession');
+    });
+
+    socket.on('ludoCreate', ({ name, avatar, mode, maxPlayers, clientId } = {}) => {
+      name = cleanName(name);
+      if (!name) return socket.emit('errorMsg', 'Digite seu nome!');
+      if (typeof clientId === 'string' && clientId) socket.clientId = clientId;
+      leaveStaleLudoRooms(socket, socket.clientId);
+
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
       let code;
       do {
@@ -510,7 +588,7 @@ function init(io, rooms, broadcastStats) {
 
       rooms[code] = makeRoom(code, socket.id, m, limit);
       rooms[code].players[socket.id] = {
-        id: socket.id, name, avatar,
+        id: socket.id, clientId: socket.clientId || null, name, avatar,
         color: null, colorName: null, team: null,
         playerIndex: null, isHost: true, ready: false, disconnected: false,
         pawns: [-1, -1, -1, -1], finished: false, eliminated: false
@@ -539,14 +617,24 @@ function init(io, rooms, broadcastStats) {
       socket.emit('ludoRoomsList', { rooms: list });
     });
 
-    socket.on('ludoJoin', ({ name, avatar, code }) => {
+    socket.on('ludoJoin', ({ name, avatar, code, clientId } = {}) => {
+      name = cleanName(name);
+      if (!name) return socket.emit('errorMsg', 'Digite seu nome!');
+      code = String(code || '').trim().toUpperCase();
+      if (typeof clientId === 'string' && clientId) socket.clientId = clientId;
+      // já está nessa mesma sala? só reenvia o estado, sem duplicar o jogador
+      if (rooms[code] && rooms[code].players[socket.id]) {
+        socket.emit('ludoJoined', { code, isHost: !!rooms[code].players[socket.id].isHost });
+        return broadcastLobby(rooms[code]);
+      }
+      leaveStaleLudoRooms(socket, socket.clientId);
       const room = rooms[code];
       if (!room || room.gameType !== 'L') return socket.emit('errorMsg', 'Sala não encontrada.');
       if (room.state !== 'LOBBY') return socket.emit('errorMsg', 'Partida já iniciada.');
       if (Object.keys(room.players).length >= room.maxPlayers) return socket.emit('errorMsg', 'Sala cheia.');
 
       room.players[socket.id] = {
-        id: socket.id, name, avatar,
+        id: socket.id, clientId: socket.clientId || null, name, avatar,
         color: null, colorName: null, team: null,
         playerIndex: null, isHost: false, ready: false, disconnected: false,
         pawns: [-1, -1, -1, -1], finished: false, eliminated: false
@@ -692,7 +780,7 @@ function init(io, rooms, broadcastStats) {
       io.to(code).emit('ludoChat', {
         sender: p.name,
         senderColor: p.color || '#00ff66',
-        text: text.trim(),
+        text: String(text).replace(/[<>]/g, '').trim().slice(0, 200),
         type: 'normal'
       });
     });
