@@ -2,11 +2,11 @@
    Avatar (RimkAvatar): camadas + editor, no tema do Portal.
    O bloco do meio veio do RimkRadio (styles.css, seção AVATARES).
    ============================================================ */
-.av-backdrop { --edge: rgba(0, 255, 102, .22); --blue: #00ff66; font-family: inherit; }
-.av { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; background: rgba(2, 4, 2, 0.7); }
+.av-backdrop { --edge: rgba(153,255,0, .22); --blue: #99ff00; font-family: inherit; }
+.av { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; background: rgba(4,4,2, 0.7); }
 .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .member-avatar.has-av, .chat-avatar.has-av, .rank-av.has-av { padding: 0; overflow: visible; }
-.rank-av { width: 2.2rem; height: 2.2rem; border-radius: 9999px; border: 1.5px solid; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(2, 4, 2, 0.7); font-family: 'Exo 2', sans-serif; font-weight: 700; font-size: .85rem; }
+.rank-av { width: 2.2rem; height: 2.2rem; border-radius: 9999px; border: 1.5px solid; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(4,4,2, 0.7); font-family: 'Exo 2', sans-serif; font-weight: 700; font-size: .85rem; }
 .chip-av { width: 1.5rem; height: 1.5rem; border-radius: 9999px; border: 1px solid var(--edge); flex-shrink: 0; display: inline-block; }
 .chip-av.hidden { display: none; }
 
@@ -58,14 +58,14 @@
 
 /* editor no tema do Portal (substitui .panel/.btn/.icon-btn do RimkRadio) */
 .av-backdrop { z-index: 10000; }
-.av-card { background: var(--bg-card, #0a150a); border: 1px solid var(--matrix-dim, #008833); border-radius: 14px; box-shadow: 0 0 28px rgba(0, 255, 102, .15), 0 12px 40px rgba(0, 0, 0, .6); color: var(--text-primary, #e0f5e8); }
+.av-card { background: var(--bg-card, #15150a); border: 1px solid var(--matrix-dim, #558800); border-radius: 14px; box-shadow: 0 0 28px rgba(153,255,0, .15), 0 12px 40px rgba(0, 0, 0, .6); color: var(--text-primary, #edf5e0); }
 .av-title { margin: 0; font-size: 1.05rem; color: #fff; }
 .av-title i { color: var(--blue); margin-right: .5rem; }
 .av-iconbtn { width: 2.2rem; height: 2.2rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, .05); border: 1px solid var(--edge); color: #C3CBBE; cursor: pointer; }
 .av-iconbtn:hover { color: var(--blue); border-color: var(--blue); }
 .av-btn { padding: .55rem 1.1rem; border-radius: 10px; font: inherit; font-weight: 700; font-size: .85rem; cursor: pointer; border: 1px solid var(--blue); transition: transform .15s, box-shadow .2s; }
-.av-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 0 18px rgba(0, 255, 102, .4); }
+.av-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 0 18px rgba(153,255,0, .4); }
 .av-btn:disabled { opacity: .5; cursor: wait; }
-.av-btn-ghost { background: rgba(0, 255, 102, .1); color: #9dffc4; }
-.av-btn-main { background: var(--blue); color: #021; }
+.av-btn-ghost { background: rgba(153,255,0, .1); color: #d8ff9d; }
+.av-btn-main { background: var(--blue); color: #112200; }
 .av-opt { font-family: inherit; }
