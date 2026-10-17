@@ -17,7 +17,7 @@
 
   <div id="guideSidebar" class="guide-sidebar">
     <h3 style="color:var(--cyan-glow); margin-top:30px;">📘 GUIA DE FUNÇÕES</h3>
-    <hr style="border-color:#004422;">
+    <hr style="border-color:#224400;">
     <p><b style="color:#aaff00;">🟢 TRIPULANTE RIMK</b><br>Habitante nativo. Objetivo: debater e votar para ejetar todos os Zunks.</p>
     <p><b style="color:#00ffff;">🧪 BIÓLOGO</b><br>Durante o Eclipse, escaneia a raça de um tripulante.</p>
     <p><b style="color:#ffaa00;">🛡 ENGENHEIRO</b><br>Durante o Eclipse, protege alguém de um ataque.</p>
@@ -44,13 +44,13 @@
         <div>
           <label>Nome do Tripulante:</label>
           <input type="text" id="username" placeholder="Digite seu apelido espacial..." style="margin-bottom:15px; font-size:1.05em;">
-          <p style="color:#88aa99; font-size:0.85em; margin-top:8px; line-height:1.5;">
+          <p style="color:#99aa88; font-size:0.85em; margin-top:8px; line-height:1.5;">
             💡 Seu <b>nome</b> e <b>personagem</b> vêm do avatar da sua conta.
             Pra alterar, clique em <b>"Editar avatar"</b> e abra seu perfil no Portal.
           </p>
         </div>
       </div>
-      <hr style="border-color:#003311; margin:25px 0;">
+      <hr style="border-color:#223300; margin:25px 0;">
       <h3>[ 2. MODO DE ENTRADA ]</h3>
       <div class="action-menu">
         <button id="btnMenuCreate" onclick="toggleForm('create')">➕ CRIAR NOVA SALA</button>
@@ -78,7 +78,7 @@
             </select>
           </div>
         </div>
-        <button onclick="createRoom()" style="width:100%; background:#006622;">GERAR CÓDIGO DA SALA</button>
+        <button onclick="createRoom()" style="width:100%; background:#446600;">GERAR CÓDIGO DA SALA</button>
       </div>
       <div id="formJoin" class="hidden-form">
         <h4 style="margin-top:0; color:var(--cyan-glow);">📡 ENTRAR EM SALA</h4>
@@ -89,7 +89,7 @@
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <small style="color:var(--cyan-glow); letter-spacing:2px;">OU ENTRE EM UMA SALA ABERTA:</small>
-          <button onclick="refreshRoomsList()" style="padding:4px 10px; font-size:0.75em; background:#002211;">🔄 ATUALIZAR</button>
+          <button onclick="refreshRoomsList()" style="padding:4px 10px; font-size:0.75em; background:#112200;">🔄 ATUALIZAR</button>
         </div>
 
         <div id="roomsListBox" class="rooms-list-box">
@@ -110,19 +110,19 @@
         </div>
         <div><h4>TRIPULANTES: <span id="queueCount">0 / 0</span></h4></div>
       </div>
-      <hr style="border-color:#003311; margin:15px 0;">
+      <hr style="border-color:#223300; margin:15px 0;">
       <div id="lobbyQueueGrid" class="cards-grid"></div>
-      <div style="margin-top:20px; background:rgba(1,10,5,0.85); border:1px solid var(--matrix-green); border-radius:8px; padding:15px;">
+      <div style="margin-top:20px; background:rgba(6,10,1,0.85); border:1px solid var(--matrix-green); border-radius:8px; padding:15px;">
         <h4 style="margin-top:0; color:var(--cyan-glow);">💬 FREQUÊNCIA DE ESPERA</h4>
         <div id="lobbyChatBox" class="chat-box" style="height:140px; margin-bottom:10px;"></div>
         <div style="display:flex; gap:8px;">
           <input type="text" id="lobbyChatInput" placeholder="Converse com a tripulação..." onkeypress="if(event.key==='Enter') sendLobbyChat()">
-          <button onclick="sendLobbyChat()" style="white-space:nowrap; background:#004422;">ENVIAR</button>
+          <button onclick="sendLobbyChat()" style="white-space:nowrap; background:#224400;">ENVIAR</button>
         </div>
       </div>
       <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
         <button id="btnReady" class="ready-btn" onclick="toggleReady()" style="flex:1; min-width:200px;">☐ MARCAR PRONTO</button>
-        <button id="btnStartMatch" onclick="startMatch()" style="flex:1; min-width:200px; background:#008833; display:none;">🚀 INICIAR PARTIDA (HOST)</button>
+        <button id="btnStartMatch" onclick="startMatch()" style="flex:1; min-width:200px; background:#558800; display:none;">🚀 INICIAR PARTIDA (HOST)</button>
         <button id="btnAddBot" onclick="addBot()" style="display:none; background:#221144; border-color:var(--ghost-purple); color:var(--ghost-purple); flex:1; min-width:180px;">🤖 ADICIONAR BOT</button>
         <button id="btnRemoveBot" onclick="removeBot()" style="display:none; background:#441122; border-color:var(--alert-red); color:var(--alert-red); flex:1; min-width:180px;">❌ REMOVER ÚLTIMO BOT</button>
       </div>

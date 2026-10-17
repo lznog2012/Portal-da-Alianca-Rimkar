@@ -606,7 +606,7 @@ function renderNightActions(players) {
   } else if (role === 'SHIELD_ENGINEER' || myPlayerData.role === 'Engenheiro de Escudo') {
     const targets = players.filter(p => p.alive);
     const html = targets.map(p =>
-      `<button onclick="sendNightAction('shield', '${p.id}')" style="background:#003311;border-color:var(--matrix-green);margin:3px;">PROTEGER ${p.name}</button>`
+      `<button onclick="sendNightAction('shield', '${p.id}')" style="background:#223300;border-color:var(--matrix-green);margin:3px;">PROTEGER ${p.name}</button>`
     ).join('');
     panel.innerHTML = `<h4>🛡 AÇÃO DO ENGENHEIRO: CAMPO DE FORÇA</h4><div>${html || 'Nenhum alvo.'}</div>`;
   } else {

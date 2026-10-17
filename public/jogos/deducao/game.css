@@ -1,6 +1,6 @@
 :root {
-  --matrix-green: #00ff66;
-  --matrix-dark-green: #003311;
+  --matrix-green: #99ff00;
+  --matrix-dark-green: #223300;
   --cyan-glow: #00ffff;
   --bg-color: #020508;
   --card-bg: rgba(10, 20, 25, 0.88);
@@ -20,7 +20,7 @@ h1, h2, h3, h4 { text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 
 .panel {
   background: var(--card-bg); border: 1px solid var(--matrix-green);
   border-radius: 10px; padding: 20px;
-  box-shadow: 0 0 20px rgba(0, 255, 102, 0.12);
+  box-shadow: 0 0 20px rgba(153,255,0, 0.12);
   backdrop-filter: blur(8px);
   animation: panelIn 0.4s ease;
 }
@@ -28,11 +28,11 @@ h1, h2, h3, h4 { text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 
 .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 15px; margin-top: 15px; }
 .player-card {
   background: rgba(5, 15, 20, 0.9);
-  border: 1px solid #005522; border-radius: 8px;
+  border: 1px solid #335500; border-radius: 8px;
   padding: 12px; text-align: center;
   position: relative; transition: all 0.3s ease;
 }
-.player-card.alive { border-color: var(--matrix-green); box-shadow: 0 0 10px rgba(0, 255, 102, 0.2); }
+.player-card.alive { border-color: var(--matrix-green); box-shadow: 0 0 10px rgba(153,255,0, 0.2); }
 .player-card.dead { border-color: var(--alert-red); opacity: 0.7; filter: grayscale(70%); }
 .player-card.ready { border-color: var(--cyan-glow); box-shadow: 0 0 18px rgba(0, 255, 255, 0.4); }
 .player-card.me { border-color: var(--cyan-glow); border-width: 2px; position: relative; }
@@ -63,7 +63,7 @@ h1, h2, h3, h4 { text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 
 @keyframes chatHighlight {
   0% { box-shadow: 0 0 0 rgba(0,255,255,0); }
   30% { box-shadow: 0 0 35px var(--cyan-glow); }
-  100% { box-shadow: 0 0 10px rgba(0,255,102,0.2); }
+  100% { box-shadow: 0 0 10px rgba(153,255,0,0.2); }
 }
 .vote-count {
   position: absolute; top: 8px; right: 8px;
@@ -86,7 +86,7 @@ h1, h2, h3, h4 { text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 
 }
 .customizer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 10px 0; }
 select, input[type="text"], input[type="number"] {
-  background: #001100; border: 1px solid var(--matrix-green);
+  background: #111100; border: 1px solid var(--matrix-green);
   color: var(--matrix-green); padding: 10px; width: 100%;
   border-radius: 4px; font-size: 0.95em;
 }
@@ -100,12 +100,12 @@ button:hover { background: var(--matrix-green); color: #000; box-shadow: 0 0 15p
 button:disabled { opacity: 0.4; cursor: not-allowed; border-color: #444; color: #888; background: #111; }
 button.ready-btn { background: #003344; border-color: var(--cyan-glow); color: var(--cyan-glow); }
 button.ready-btn.active { background: var(--cyan-glow); color: #000; }
-button.play-again { background: #008833; font-size: 1.1em; padding: 14px 30px; }
+button.play-again { background: #558800; font-size: 1.1em; padding: 14px 30px; }
 .code-display { font-size: 2.2em; color: var(--gold-yellow); text-shadow: 0 0 12px var(--gold-yellow); letter-spacing: 5px; font-weight: bold; }
 .game-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
 @media (max-width: 850px) { .game-layout { grid-template-columns: 1fr; } }
 .chat-box {
-  height: 260px; background: #010805; border: 1px solid #004411;
+  height: 260px; background: #040801; border: 1px solid #334400;
   border-radius: 4px; padding: 10px; overflow-y: auto;
   display: flex; flex-direction: column; gap: 6px; font-size: 0.88em;
 }
@@ -122,13 +122,13 @@ button.play-again { background: #008833; font-size: 1.1em; padding: 14px 30px; }
 .badge-ally { background: #221144; color: var(--ghost-purple); border: 1px solid var(--ghost-purple); }
 .badge-ready { background: #003344; color: var(--cyan-glow); border: 1px solid var(--cyan-glow); }
 .action-menu { display: flex; gap: 15px; margin-top: 20px; }
-.action-menu button { flex: 1; padding: 15px; font-size: 1em; background: #002211; border: 2px solid var(--matrix-green); }
+.action-menu button { flex: 1; padding: 15px; font-size: 1em; background: #112200; border: 2px solid var(--matrix-green); }
 .action-menu button:hover, .action-menu button.active { background: var(--matrix-green); color: #000; }
-.hidden-form { display: none; background: #010c06; padding: 20px; border: 1px dashed var(--matrix-green); border-radius: 8px; margin-top: 15px; }
+.hidden-form { display: none; background: #070c01; padding: 20px; border: 1px dashed var(--matrix-green); border-radius: 8px; margin-top: 15px; }
 .guide-sidebar {
   position: fixed; left: 0; top: 0; width: 310px; height: 100vh;
-  background: rgba(2, 10, 8, 0.96); border-right: 2px solid var(--matrix-green);
-  box-shadow: 5px 0 25px rgba(0, 255, 102, 0.3);
+  background: rgba(4,10,2, 0.96); border-right: 2px solid var(--matrix-green);
+  box-shadow: 5px 0 25px rgba(153,255,0, 0.3);
   transition: transform 0.3s ease, visibility 0s linear 0.3s; transform: translateX(calc(-100% - 40px));
   visibility: hidden; max-width: 100vw;
   pointer-events: none; z-index: 1000; padding: 20px; overflow-y: auto;
@@ -136,7 +136,7 @@ button.play-again { background: #008833; font-size: 1.1em; padding: 14px 30px; }
 .guide-sidebar.open { transform: translateX(0); visibility: visible; pointer-events: auto; transition: transform 0.3s ease, visibility 0s linear 0s; }
 .guide-toggle-btn {
   position: fixed; left: 10px; top: 10px; z-index: 1001;
-  background: #002211; border: 1px solid var(--matrix-green);
+  background: #112200; border: 1px solid var(--matrix-green);
   color: var(--matrix-green); padding: 8px 12px;
   border-radius: 5px; cursor: pointer; font-size: 0.85em;
 }
@@ -148,7 +148,7 @@ button.play-again { background: #008833; font-size: 1.1em; padding: 14px 30px; }
 }
 .modal.open { display: flex; pointer-events: auto; }
 .modal-content {
-  background: #040d0a; border: 2px solid var(--matrix-green);
+  background: #070d04; border: 2px solid var(--matrix-green);
   border-radius: 10px; max-width: 700px; width: 100%;
   max-height: 85vh; overflow-y: auto; padding: 25px;
   box-shadow: 0 0 30px var(--matrix-green);
@@ -158,9 +158,9 @@ button.play-again { background: #008833; font-size: 1.1em; padding: 14px 30px; }
   display: flex; flex-direction: column; gap: 10px; pointer-events: none;
 }
 .toast {
-  background: rgba(2, 20, 10, 0.96); border: 2px solid var(--matrix-green);
+  background: rgba(12,20,2, 0.96); border: 2px solid var(--matrix-green);
   border-radius: 8px; padding: 14px 18px; color: var(--matrix-green);
-  box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
+  box-shadow: 0 0 20px rgba(153,255,0, 0.4);
   min-width: 260px; max-width: 380px; font-size: 0.9em;
   animation: slideIn 0.3s ease, fadeOut 0.4s ease 4.6s forwards;
   pointer-events: auto;
@@ -173,7 +173,7 @@ button.play-again { background: #008833; font-size: 1.1em; padding: 14px 30px; }
 @keyframes fadeOut { to { transform: translateX(120%); opacity: 0; } }
 .game-over-panel {
   display: none;
-  background: linear-gradient(135deg, rgba(20,5,5,0.95), rgba(5,20,15,0.95));
+  background: linear-gradient(135deg, rgba(20,5,5,0.95), rgba(10,20,5,0.95));
   border: 2px solid var(--gold-yellow); border-radius: 12px;
   padding: 25px; margin-top: 15px;
   box-shadow: 0 0 40px rgba(255,204,0,0.3);
@@ -202,12 +202,12 @@ button.play-again { background: #008833; font-size: 1.1em; padding: 14px 30px; }
   position: fixed; bottom: 15px; right: 15px; z-index: 1001;
   width: 45px; height: 45px; padding: 0;
   border-radius: 50%; font-size: 1.2em;
-  background: #002211; border: 1px solid var(--matrix-green);
+  background: #112200; border: 1px solid var(--matrix-green);
   color: var(--matrix-green); cursor: pointer;
 }
 body::after {
   content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
-  background: repeating-linear-gradient(0deg, rgba(0,255,102,0.03) 0, rgba(0,255,102,0.03) 1px, transparent 1px, transparent 3px);
+  background: repeating-linear-gradient(0deg, rgba(153,255,0,0.03) 0, rgba(153,255,0,0.03) 1px, transparent 1px, transparent 3px);
 }
 /* BOTÃO EDITAR PERFIL */
 .edit-profile-btn {
@@ -244,7 +244,7 @@ body::after {
 
 .rooms-empty {
   text-align: center;
-  color: #88aa99;
+  color: #99aa88;
   font-style: italic;
   font-size: 0.85em;
   margin: 15px 0;
@@ -256,8 +256,8 @@ body::after {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: rgba(0, 20, 15, 0.6);
-  border: 1px solid rgba(0,255,102,0.25);
+  background: rgba(5,20,0, 0.6);
+  border: 1px solid rgba(153,255,0,0.25);
   border-radius: 6px;
   margin-bottom: 6px;
   cursor: pointer;
@@ -266,8 +266,8 @@ body::after {
 
 .room-card:hover {
   border-color: var(--matrix-green);
-  background: rgba(0, 40, 20, 0.7);
-  box-shadow: 0 0 12px rgba(0,255,102,0.3);
+  background: rgba(20,40,0, 0.7);
+  box-shadow: 0 0 12px rgba(153,255,0,0.3);
   transform: translateX(3px);
 }
 
@@ -291,7 +291,7 @@ body::after {
 
 .room-card-host {
   font-size: 0.75em;
-  color: #88aa99;
+  color: #99aa88;
   font-style: italic;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -321,7 +321,7 @@ body::after {
   top: 15px;
   left: 15px;
   z-index: 1001;
-  background: #002211;
+  background: #112200;
   border: 1px solid var(--matrix-green);
   color: var(--matrix-green);
   padding: 8px 14px;
