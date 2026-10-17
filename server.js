@@ -5,7 +5,8 @@ const { Server } = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+// Tolerância maior a quedas curtas (celular em segundo plano, troca de Wi-Fi/4G).
+const io = new Server(server, { pingInterval: 20000, pingTimeout: 60000 });
 const PORT = process.env.PORT || 3000;
 
 // Config pública do Supabase (URL + chave "anon"), lida das variáveis de ambiente do Render.
@@ -162,6 +163,7 @@ io.on('connection', (socket) => {
     if (!clientId) return;
     for (const code in rooms) {
       const room = rooms[code];
+      if (room.gameType === 'L') continue; // Ludo cuida da própria reconexão (ludoIdentify)
       const oldId = Object.keys(room.players).find(pid => 
         room.players[pid].clientId === clientId && room.players[pid].disconnected
       );
@@ -403,6 +405,7 @@ io.on('connection', (socket) => {
     const code = socket.currentRoom;
     if (!code || !rooms[code]) return;
     const room = rooms[code];
+    if (room.gameType === 'L') return; // o Ludo trata o próprio disconnect (jogos/ludo.js)
     const p = room.players[socket.id];
     if (!p) return;
     p.disconnected = true;
