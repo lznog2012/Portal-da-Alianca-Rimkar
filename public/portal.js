@@ -471,3 +471,19 @@ function attachSoundsPortal() {
     });
   });
 }
+
+/* ===== Contador "Última infiltração detectada" =====
+   Em 17/10/2026 eram 137 dias; soma +1 a cada dia (pela data local de quem acessa).
+   Para mudar o valor: ajuste ANCORA e DIAS_NA_ANCORA. */
+(function () {
+  var el = document.getElementById('diasInfiltracao');
+  if (!el) return;
+  var ANCORA = [2026, 10, 17];   // ano, mês, dia
+  var DIAS_NA_ANCORA = 137;
+  var hoje = new Date();
+  // UTC só pra contar dias de calendário sem erro de horário de verão
+  var d0 = Date.UTC(ANCORA[0], ANCORA[1] - 1, ANCORA[2]);
+  var d1 = Date.UTC(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  var dias = DIAS_NA_ANCORA + Math.max(0, Math.round((d1 - d0) / 86400000));
+  el.textContent = 'Há ' + dias + (dias === 1 ? ' dia' : ' dias');
+})();
