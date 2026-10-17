@@ -7,7 +7,16 @@ let myId = null;
 let currentRoom = null;
 let roomState = null;
 let selectedMode = 'A';
-let soundEnabled = localStorage.getItem('alpha_sound') !== 'false';
+// localStorage pode lançar erro (modo privado, navegador embutido de app, cookies bloqueados).
+// Sem isso o script inteiro morria no carregamento e os botões "não faziam nada".
+const _memStore = {};
+const safeLS = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return Object.prototype.hasOwnProperty.call(_memStore, k) ? _memStore[k] : null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { _memStore[k] = String(v); } }
+};
+let soundEnabled = safeLS.get('alpha_sound') !== 'false';
+let creatingRoom = false;   // trava de clique duplo em CRIAR SALA
+let creatingTimer = null;
 
 // ========== CONSTANTES DO TABULEIRO ==========
 const PATH = [
@@ -70,22 +79,22 @@ const STORAGE = {
 };
 
 function getClientId() {
-  let id = localStorage.getItem(STORAGE.clientId);
+  let id = safeLS.get(STORAGE.clientId);
   if (!id) {
     id = 'c_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-    localStorage.setItem(STORAGE.clientId, id);
+    safeLS.set(STORAGE.clientId, id);
   }
   return id;
 }
 const CLIENT_ID = getClientId();
 
-function getStoredName() { return localStorage.getItem(STORAGE.name) || ''; }
+function getStoredName() { return safeLS.get(STORAGE.name) || ''; }
 function getStoredAvatar() {
   // O personagem do jogo é o avatar criado na conta (camadas do RimkAvatar).
   return (window.Conta && Conta.gameAvatar && Conta.gameAvatar()) || { b: 'rimk', bg: null, i: [] };
 }
 function saveProfile(name) {
-  if (name) localStorage.setItem(STORAGE.name, name);
+  if (name) safeLS.set(STORAGE.name, name);
 }
 
 // ========== SOM ==========
@@ -151,7 +160,7 @@ const SOUNDS = {
 
 function toggleSound() {
   soundEnabled = !soundEnabled;
-  localStorage.setItem(STORAGE.sound, soundEnabled);
+  safeLS.set(STORAGE.sound, soundEnabled);
   document.getElementById('soundToggle').innerText = soundEnabled ? '🔊' : '🔇';
 }
 
@@ -669,19 +678,41 @@ function addChatMessage(boxId, sender, text, type, senderColor) {
 }
 
 // ========== AÇÕES DO USUÁRIO ==========
+function setCreating(on) {
+  creatingRoom = on;
+  clearTimeout(creatingTimer);
+  document.querySelectorAll('#formCreate button[onclick="createRoom()"]').forEach(b => {
+    b.disabled = on;
+    b.style.opacity = on ? '0.6' : '';
+  });
+  if (on) creatingTimer = setTimeout(() => setCreating(false), 6000); // destrava se o servidor não responder
+}
+
+function ensureConnected() {
+  if (!socket) { showToast('⚠️ ERRO', 'Sem conexão com o servidor. Recarregue a página.', 'zunk'); return false; }
+  if (!socket.connected) {
+    showToast('📡 CONECTANDO', 'Ainda conectando ao servidor... tente de novo em instantes.', 'cyan');
+    try { socket.connect(); } catch (e) {}
+    return false;
+  }
+  return true;
+}
+
 function createRoom() {
+  if (creatingRoom) return;
   const name = document.getElementById('username').value.trim();
   if (!name) return showToast('⚠️ ERRO', 'Digite seu nome!', 'zunk');
+  if (!ensureConnected()) return;
   saveProfile(name);
   const maxPlayers = parseInt(document.getElementById('maxPlayersInput').value) || 4;
-  if (socket) {
-    socket.emit('ludoCreate', {
-      name,
-      avatar: getStoredAvatar(),
-      mode: selectedMode,
-      maxPlayers
-    });
-  }
+  setCreating(true);
+  socket.emit('ludoCreate', {
+    name,
+    avatar: getStoredAvatar(),
+    mode: selectedMode,
+    maxPlayers,
+    clientId: CLIENT_ID
+  });
 }
 
 function joinRoom() {
@@ -689,10 +720,9 @@ function joinRoom() {
   if (!name) return showToast('⚠️ ERRO', 'Digite seu nome!', 'zunk');
   const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
   if (!code) return showToast('⚠️ ERRO', 'Digite o código!', 'zunk');
+  if (!ensureConnected()) return;
   saveProfile(name);
-  if (socket) {
-    socket.emit('ludoJoin', { name, avatar: getStoredAvatar(), code });
-  }
+  socket.emit('ludoJoin', { name, avatar: getStoredAvatar(), code, clientId: CLIENT_ID });
 }
 
 function refreshLudoRoomsList() {
@@ -963,21 +993,44 @@ if (socket) {
   socket.on('connect', () => {
     myId = socket.id;
     socket.emit('identify', { clientId: CLIENT_ID });
+    // se a conexão caiu e voltou, o servidor devolve a pessoa pra sala dela
+    socket.emit('ludoIdentify', { clientId: CLIENT_ID });
   });
 
-socket.on('reconnected', d => {
-    document.getElementById('setupView').style.display = 'block';
-    document.getElementById('lobbyView').style.display = 'none';
-    document.getElementById('gameView').style.display = 'none';
-    document.getElementById('endView').style.display = 'none';
-});
-  
-  socket.on('errorMsg', (msg) => showToast('⚠️ ERRO', msg, 'zunk'));
+  // Voltou pra uma sala depois de recarregar a página / cair a conexão.
+  socket.on('ludoReconnected', (d) => {
+    currentRoom = d.code;
+    setCreating(false);
+    const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? 'block' : 'none'; };
+    show('setupView', false);
+    show('endView', false);
+    show('lobbyView', d.state === 'LOBBY');
+    show('gameView', d.state === 'PLAYING');
+    const code = document.getElementById('displayRoomCode');
+    if (code) code.innerText = d.code;
+    showToast('📡 RECONECTADO', 'Você voltou para a sala ' + d.code + '.', 'cyan');
+  });
+
+  // O servidor não tem mais a sala/jogador: volta pro início em vez de ficar travado.
+  socket.on('ludoNoSession', () => {
+    if (!currentRoom) return;
+    currentRoom = null;
+    roomState = null;
+    const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? 'block' : 'none'; };
+    show('setupView', true);
+    show('lobbyView', false);
+    show('gameView', false);
+    show('endView', false);
+    showToast('⚠️ SALA ENCERRADA', 'Você ficou tempo demais offline e saiu da sala.', 'zunk');
+  });
+
+  socket.on('errorMsg', (msg) => { setCreating(false); showToast('⚠️ ERRO', msg, 'zunk'); });
   socket.on('ludoRoomsList', (data) => {
     renderLudoRoomsList(data.rooms);
   });
   
   socket.on('ludoJoined', (data) => {
+    setCreating(false);
     currentRoom = data.code;
     document.getElementById('setupView').style.display = 'none';
     document.getElementById('lobbyView').style.display = 'block';
@@ -1328,7 +1381,8 @@ socket.on('reconnected', d => {
   });
 
   socket.on('disconnect', () => {
-    showToast('⚠️ DESCONECTADO', 'Você perdeu conexão. Recarregue a página.', 'zunk');
+    showToast('⚠️ CONEXÃO PERDIDA', 'Tentando reconectar... (se não voltar, recarregue a página)', 'zunk');
+    setCreating(false);
   });
 }
 
@@ -1375,8 +1429,8 @@ function saveLudoHistory(data) {
   } catch (e) {}
 
   let h = [];
-  try { h = JSON.parse(localStorage.getItem('alpha_history') || '[]'); } catch (e) {}
+  try { h = JSON.parse(safeLS.get('alpha_history') || '[]'); } catch (e) {}
   h.push(entry);
   if (h.length > 100) h.shift();
-  localStorage.setItem('alpha_history', JSON.stringify(h));
+  safeLS.set('alpha_history', JSON.stringify(h));
 }

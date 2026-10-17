@@ -1390,6 +1390,7 @@ button.ready-btn.active { background: var(--cyan-glow); color: #000; }
   top: 15px;
   left: 15px;
   width: 320px;
+  max-width: calc(100vw - 30px);
   max-height: calc(100vh - 30px);
   background: rgba(0, 20, 15, 0.96);
   border: 2px solid var(--matrix-green);
@@ -1399,13 +1400,23 @@ button.ready-btn.active { background: var(--cyan-glow); color: #000; }
   flex-direction: column;
   box-shadow: 0 0 40px rgba(0,255,102,0.3);
   backdrop-filter: blur(10px);
-  transform: translateX(-350px);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Escondido de verdade: sai 100% da tela (+ margem p/ borda e sombra), fica invisível
+     e não captura toques. Antes era só -350px, e no celular (painel mais largo que isso)
+     sobrava uma faixa preta por cima do conteúdo. */
+  transform: translateX(calc(-100% - 60px));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, visibility 0s linear 0.35s;
   overflow: hidden;
 }
 
 .narration-panel.open {
   transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, visibility 0s linear 0s;
 }
 
 .narration-header {
@@ -1535,13 +1546,25 @@ button.ready-btn.active { background: var(--cyan-glow); color: #000; }
 }
 
 @media (max-width: 600px) {
+  /* botão da narração vai pro canto inferior esquerdo (espelha o botão de som),
+     pra não ficar em cima do conteúdo no topo da tela */
   .narration-toggle {
-    top: 50px;
+    top: auto;
+    bottom: 15px;
     left: 10px;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     font-size: 1em;
   }
+  .narration-panel {
+    top: auto;
+    bottom: 65px;
+  }
+  #setupView > div[style*="160px 1fr"] {
+    grid-template-columns: 110px 1fr !important;
+    gap: 12px !important;
+  }
+  #setupView .avatar-box { width: 100px; height: 100px; }
   .narration-panel {
     width: calc(100vw - 30px);
     left: 15px;
