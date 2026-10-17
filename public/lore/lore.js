@@ -317,7 +317,7 @@ function renderSolarSystem() {
     { nome: 'FERRUM',     imagem: 'ferrum.png',     cor: '#ff3344', tamanho: 20, velocidade: 30, offset: 0 },
     { nome: 'KAAL-7',     imagem: 'kaal7.png',      cor: '#ffcc00', tamanho: 40, velocidade: 45, offset: 90 },
     { nome: 'RIMKÓPOLIS', imagem: 'rimkopolis.png', cor: '#aaff00', tamanho: 60, velocidade: 60, offset: 200 },
-    { nome: 'NEREIDA',    imagem: 'nereida.png',    cor: '#00ffcc', tamanho: 80, velocidade: 75, offset: 305 }
+    { nome: 'NEREIDA',    imagem: 'nereida.png',    cor: '#33ff00', tamanho: 80, velocidade: 75, offset: 305 }
   ];
 
   planets.forEach(p => {

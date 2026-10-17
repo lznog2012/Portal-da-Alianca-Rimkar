@@ -15,8 +15,8 @@
       <stop offset="100%" stop-color="#ffcc00"/>
     </radialGradient>
     <radialGradient id="nereidGlow">
-      <stop offset="0%" stop-color="#aaffee"/>
-      <stop offset="100%" stop-color="#00ffcc"/>
+      <stop offset="0%" stop-color="#bbffaa"/>
+      <stop offset="100%" stop-color="#33ff00"/>
     </radialGradient>
     <radialGradient id="ferrumGlow">
       <stop offset="0%" stop-color="#ff8899"/>
@@ -33,14 +33,14 @@
   </defs>
 
   <!-- Anel externo (Pacto dos Quatro) -->
-  <circle cx="100" cy="100" r="92" fill="none" stroke="#00ff66" stroke-width="1" opacity="0.5" stroke-dasharray="3 5"/>
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#99ff00" stroke-width="1" opacity="0.5" stroke-dasharray="3 5"/>
   <circle cx="100" cy="100" r="88" fill="none" stroke="#ffcc00" stroke-width="1.5" opacity="0.7"/>
 
   <!-- Órbitas (4 elipses em ângulos diferentes) -->
   <g opacity="0.55" stroke-width="1.2" fill="none">
     <ellipse cx="100" cy="100" rx="80" ry="30" stroke="#aaff00" transform="rotate(0 100 100)"/>
     <ellipse cx="100" cy="100" rx="80" ry="30" stroke="#ffcc00" transform="rotate(45 100 100)"/>
-    <ellipse cx="100" cy="100" rx="80" ry="30" stroke="#00ffcc" transform="rotate(90 100 100)"/>
+    <ellipse cx="100" cy="100" rx="80" ry="30" stroke="#33ff00" transform="rotate(90 100 100)"/>
     <ellipse cx="100" cy="100" rx="80" ry="30" stroke="#ff3344" transform="rotate(135 100 100)"/>
   </g>
 
