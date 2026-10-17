@@ -18,7 +18,7 @@
       "autor": "Geólogo Ferrum Haldor",
       "data": "Ano 423 da Aliança",
       "icone": "💎",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar cada material raro do sistema e suas propriedades.</em></p><p>Este artigo vai abordar:</p><ul><li>Kryon (supercondutor, vindo do cinturão)</li><li>Ligas de ferrum (resistência extrema)</li><li>Cristais de silício (componentes de IA)</li><li>Cristais vivos de Nereida</li><li>Como cada material é usado na tecnologia</li></ul>"
+      "conteudo": "<ul><li><strong>Kryon:</strong> metal supercondutor instável do cinturão de asteroides. Quem controla o Kryon, controla a energia do sistema.</li><li><strong>Ligas de Ferrum:</strong> metal resistente usado em naves e blindagens.</li><li><strong>Cristais de Silício (Kaal-7):</strong> base de toda a tecnologia de processamento e IA.</li><li><strong>Cristais Vivos (Nereida):</strong> memória galáctica.</li></ul>"
     },
     {
       "numero": "402",
@@ -26,7 +26,7 @@
       "autor": "Biólogo Rimk Kael",
       "data": "Ano 501 da Aliança",
       "icone": "🧬",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar a biologia de cada raça do sistema.</em></p><p>Este artigo vai abordar:</p><ul><li>Os Rimks (bioluminescência, bigode)</li><li>Os Sahrin (adaptação ao deserto)</li><li>Os Ferrum (força, adaptação ao calor)</li><li>Os Nereids (telepatia, olhos sem pupila)</li><li>Como os Zunks se infiltram (metamorfose)</li></ul>"
+      "conteudo": "<ul><li><strong>Rimks:</strong> base genética de todos, bioluminescência e bigode.</li><li><strong>Sahrin:</strong> adaptação extrema ao calor e à visão de longo alcance.</li><li><strong>Ferrum:</strong> força muscular e resistência a ambientes hostis.</li><li><strong>Nereids:</strong> telepatia e comunicação por ondas sonoras.</li><li><strong>Zunks:</strong> metamorfos. Copiam a aparência perfeitamente, exceto o bigode (não conseguem gerar o símbolo genético dos Rimks).</li></ul>"
     },
     {
       "numero": "403",
@@ -42,7 +42,7 @@
       "autor": "Cientista Nereid Sylvaris",
       "data": "Ano 612 da Aliança",
       "icone": "🌫️",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar o problema dos vapores impuros em cada planeta.</em></p><p>Este artigo vai abordar:</p><ul><li>Vapor Rimkal (Rimkópolis)</li><li>Névoa Sílica (Kaal-7)</li><li>Vapor Ferroso (Ferrum)</li><li>Por que Nereida é imune</li><li>Como isso força a interdependência dos mundos</li></ul>"
+      "conteudo": "<h3>O Ciclo da Água</h3><ul><li>A água de Nereida é pura por causa dos cristais vivos no fundo do oceano.</li><li>A água dos outros planetas é impura. Quando evapora, vira gás tóxico (Vapores Impuros), forçando os povos a viverem em cúpulas ou subterrâneos.</li></ul><h3>Os Vapores Impuros</h3><ul><li><strong>Rimkópolis:</strong> Vapor Rimkal (ácido fraco que corrói equipamentos).</li><li><strong>Kaal-7:</strong> Névoa Sílica (partículas de vidro no ar que causam cicatrizes pulmonares).</li><li><strong>Ferrum:</strong> Vapor Ferroso (gás denso e corrosivo).</li><li><strong>Nereida:</strong> Nenhum. Vapor Puro (evapora limpo). É o único planeta imune ao ciclo corrosivo.</li></ul><h3>O Tabu</h3><p>Os Rimks tentaram replicar a água pura, mas o custo energético (usando cristais de Kaal-7 e metal de Ferrum) quebraria a economia do sistema. Nereida é insubstituível.</p>"
     },
     {
       "numero": "405",

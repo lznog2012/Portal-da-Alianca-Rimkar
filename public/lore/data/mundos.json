@@ -16,7 +16,7 @@
           "id": "povos",
           "icone": "👽",
           "titulo": "Os Povos",
-          "conteudo": "<p><em>Placeholder: aqui vai detalhar os Rimks — biologia, bigode, bioluminescência, personalidade pacífica, valorização da educação.</em></p>"
+          "conteudo": "<p>Rimks. Pele verde, bioluminescentes, todos usam bigode (a marca da criação).</p><p><strong>Biologia:</strong> base genética de todos, bioluminescência e bigode.</p>"
         },
         {
           "id": "geografia",
@@ -28,13 +28,13 @@
           "id": "clima",
           "icone": "🌦️",
           "titulo": "Clima",
-          "conteudo": "<p><em>Placeholder: aqui vai descrever a atmosfera densa, o problema do Vapor Rimkal, e como isso afeta a vida.</em></p>"
+          "conteudo": "<p><strong>Problema Ambiental:</strong> Biosfera morrendo. A vegetação precisa da água de Nereida.</p><p><strong>Vapor Impuro:</strong> Vapor Rimkal (ácido fraco que corrói equipamentos).</p>"
         },
         {
           "id": "politica",
           "icone": "⚖️",
           "titulo": "Política",
-          "conteudo": "<p><em>Placeholder: aqui vai detalhar a sociedade cooperativista, o líder trabalhador eleito por consenso.</em></p>"
+          "conteudo": "<p><strong>Sociedade:</strong> Cooperativista. Líder trabalhador eleito por consenso. Zero pobreza, foco absoluto em educação e ciência.</p><p><strong>Fornece:</strong> Tecnologia de ponta (IA, reatores, nanotecnologia).</p>"
         },
         {
           "id": "cultura",
@@ -68,7 +68,7 @@
           "id": "povos",
           "icone": "👽",
           "titulo": "Os Povos",
-          "conteudo": "<p><em>Placeholder: aqui vai detalhar os Sahrin — corpos esguios, pele ocre, olhos adaptados ao brilho.</em></p>"
+          "conteudo": "<p>Sahrin. Corpos esguios, pele ocre, olhos adaptados ao sol. Nômades e astrônomos.</p><p><strong>Biologia:</strong> adaptação extrema ao calor e à visão de longo alcance.</p>"
         },
         {
           "id": "geografia",
@@ -80,13 +80,13 @@
           "id": "clima",
           "icone": "🌦️",
           "titulo": "Clima",
-          "conteudo": "<p><em>Placeholder: aqui vai descrever as tempestades de areia e o problema da Névoa Sílica.</em></p>"
+          "conteudo": "<p><strong>Problema Ambiental:</strong> Tempestades de areia violentas enterrando cidades subterrâneas.</p><p><strong>Vapor Impuro:</strong> Névoa Sílica (partículas de vidro no ar que causam cicatrizes pulmonares).</p>"
         },
         {
           "id": "politica",
           "icone": "⚖️",
           "titulo": "Política",
-          "conteudo": "<p><em>Placeholder: aqui vai detalhar o Conselho dos Anciãos e como funciona a escolha.</em></p>"
+          "conteudo": "<p><strong>Sociedade:</strong> Conselho dos Anciãos. Decisões por sabedoria ancestral.</p><p><strong>Fornece:</strong> Cristais de Silício (base de toda a tecnologia de processamento e IA).</p>"
         },
         {
           "id": "cultura",
@@ -120,7 +120,7 @@
           "id": "povos",
           "icone": "👽",
           "titulo": "Os Povos",
-          "conteudo": "<p><em>Placeholder: aqui vai detalhar os Ferrum — guerreiros, ferreiros, pele vermelho-cobre, força física.</em></p>"
+          "conteudo": "<p>Ferrum. Pele vermelho-cobre, corpos fortes, marcas de batalha. Guerreiros e ferreiros.</p><p><strong>Biologia:</strong> força muscular e resistência a ambientes hostis.</p>"
         },
         {
           "id": "geografia",
@@ -132,13 +132,13 @@
           "id": "clima",
           "icone": "🌦️",
           "titulo": "Clima",
-          "conteudo": "<p><em>Placeholder: aqui vai descrever o clima árido, os vapores ferrosos, os terremotos recentes.</em></p>"
+          "conteudo": "<p><strong>Problema Ambiental:</strong> Mineração desenfreada no passado enfraqueceu a crosta. Terremotos semanais ameaçam partir o planeta.</p><p><strong>Vapor Impuro:</strong> Vapor Ferroso (gás denso e corrosivo).</p>"
         },
         {
           "id": "politica",
           "icone": "⚖️",
           "titulo": "Política",
-          "conteudo": "<p><em>Placeholder: aqui vai detalhar os clãs familiares, as alianças, a honra e dívida de sangue.</em></p>"
+          "conteudo": "<p><strong>Sociedade:</strong> Clãs de Sangue e Aço. Honra, dívida de sangue e alianças familiares.</p><p><strong>Fornece:</strong> Ligas de Ferrum (metal resistente usado em naves e blindagens).</p>"
         },
         {
           "id": "cultura",
@@ -164,7 +164,7 @@
       "id": "nereida",
       "nome": "Nereida",
       "epiteto": "O Coração Líquido",
-      "cor": "#00ffcc",
+      "cor": "#33ff00",
       "imagem": "nereida.png",
       "range": "130-137",
       "secoes": [
@@ -172,7 +172,7 @@
           "id": "povos",
           "icone": "👽",
           "titulo": "Os Povos",
-          "conteudo": "<p><em>Placeholder: aqui vai detalhar os Nereids — telepatas, empáticos, pele ciano, olhos sem pupila.</em></p>"
+          "conteudo": "<p>Nereids. Pele ciano, telepatas, sem pupilas.</p><p><strong>Biologia:</strong> telepatia e comunicação por ondas sonoras.</p>"
         },
         {
           "id": "geografia",
@@ -184,13 +184,13 @@
           "id": "clima",
           "icone": "🌦️",
           "titulo": "Clima",
-          "conteudo": "<p><em>Placeholder: aqui vai descrever o clima ameno, a ausência de vapores impuros, a água 100% pura.</em></p>"
+          "conteudo": "<p><strong>Problema Ambiental:</strong> Os cristais vivos estão ficando doentes. A pureza da água caiu 3%.</p><p><strong>Vapor Impuro:</strong> Nenhum. Vapor Puro (evapora limpo). É o único planeta imune ao ciclo corrosivo.</p>"
         },
         {
           "id": "politica",
           "icone": "⚖️",
           "titulo": "Política",
-          "conteudo": "<p><em>Placeholder: aqui vai detalhar a mente coletiva, os porta-vozes temporários, os cristais de memória.</em></p>"
+          "conteudo": "<p><strong>Sociedade:</strong> Mente Coletiva. Decisões por \"sentir a vontade comum\".</p><p><strong>Fornece:</strong> Água 100% Pura e Cristais Vivos (memória galáctica).</p>"
         },
         {
           "id": "cultura",

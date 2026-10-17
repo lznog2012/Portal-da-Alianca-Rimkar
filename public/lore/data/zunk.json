@@ -13,7 +13,7 @@
       "subtitulo": "Introdução ao Fenômeno Zunk",
       "icone": "⚠️",
       "foto": null,
-      "conteudo": "<p><em>Placeholder: aqui vai a introdução geral ao problema Zunk. Deve ser dividido em 3 seções: O Que Sabemos (fatos confirmados), O Que Suspeitamos (hipóteses), O Que Não Sabemos (lacunas).</em></p><h3>Fatos conhecidos</h3><p>Origem fora da galáxia. Duas castas conhecidas: Vharn e Thrakk. São metamorfos. Não têm bigode — a marca da ausência.</p><h3>Principais suspeitas</h3><p>Podem se camuflar por décadas. Podem se comunicar por telepatia. Podem escolher quando revelar.</p><h3>Fatos desconhecidos</h3><p>Quantos são. Como chegam. Por que atacam. Se têm fraquezas. Como encontrá-los definitivamente.</p><p><span class='censored'>████████████████</span></p>"
+      "conteudo": "<h3>Origem</h3><p>Fora do Sistema Rímkar (Sistema Zunk'nir).</p><h3>Biologia</h3><p>Metamorfos. Copiam a aparência perfeitamente, exceto o bigode (eles não conseguem gerar o símbolo genético dos Rimks).</p><h3>As Duas Castas</h3><ul><li><strong>Vharn (O Sussurro):</strong> casta intelectual.</li><li><strong>Thrakk (O Osso):</strong> casta física.</li></ul><h3>Objetivo</h3><p>Destruir a Aliança. Eles não atacam com naves (não podem vencer 4 mundos), eles atacam corrompendo a confiança e cortando os recursos vitais.</p><p><span class='censored'>████████████████</span></p>"
     },
     {
       "id": "vharn",
@@ -24,7 +24,7 @@
       "foto": "/jogos/ludo/art/pawns/vharn.png",
       "planeta": "Nyxaris",
       "planeta_foto": "/images/planetas/nyxaris.png",
-      "conteudo": "<p><em>Placeholder: aqui vai o perfil completo da casta Vharn.</em></p><h3>Classificação</h3><p><b>Tipo:</b> Infiltrador mental<br><b>Aparência real:</b> Massa roxa pulsante<br><b>Planeta natal:</b> Nyxaris</p><h3>Comportamento</h3><p>Fala muito, mente, manipula. Planta discórdia antes de atacar. Gosta de plantar suspeita entre os aliados antes de agir.</p><h3>Marca do Disfarce</h3><p>Seu disfarce perfeito tem um detalhe sutil: um <b>terceiro olho</b> sempre entreaberto na testa. Quem sabe olhar, encontra.</p><p><span class='censored'>████████████████████████</span></p>"
+      "conteudo": "<h3>Classificação</h3><p><b>Casta:</b> intelectual — O Sussurro<br><b>Pele:</b> roxa<br><b>Planeta natal:</b> Nyxaris</p><h3>Comportamento</h3><p>Manipulam, mentem, causam discórdia.</p><h3>Marca do Disfarce</h3><p>Seu disfarce tem um <b>terceiro olho</b> sutil. Quem sabe olhar, encontra.</p><p><span class='censored'>████████████████████████</span></p>"
     },
     {
       "id": "thrakk",
@@ -35,7 +35,7 @@
       "foto": "/jogos/ludo/art/pawns/thrakk.png",
       "planeta": "Kaldr",
       "planeta_foto": "/images/planetas/kaldr.png",
-      "conteudo": "<p><em>Placeholder: aqui vai o perfil completo da casta Thrakk.</em></p><h3>Classificação</h3><p><b>Tipo:</b> Infiltrador físico<br><b>Aparência real:</b> Pele branca-óssea, olhos vazios<br><b>Planeta natal:</b> Kaldr</p><h3>Comportamento</h3><p>Silencioso, brutal, direto. Não se importa em ser descoberto — se descobrirem, mata e assume o próximo.</p><h3>Marca do Disfarce</h3><p>Nunca usa bigode. É a única coisa que não consegue replicar — <b>bigode é a marca dos filhos dos Rimks</b>.</p><p><span class='censored'>██████████████████████████████████</span></p>"
+      "conteudo": "<h3>Classificação</h3><p><b>Casta:</b> física — O Osso<br><b>Pele:</b> branca-óssea<br><b>Planeta natal:</b> Kaldr</p><h3>Comportamento</h3><p>Silenciosos, brutais, assassinos.</p><h3>Marca do Disfarce</h3><p>Não usam bigode. É a única coisa que não conseguem replicar — <b>bigode é a marca dos filhos dos Rimks</b>.</p><p><span class='censored'>██████████████████████████████████</span></p>"
     }
   ]
 }

@@ -10,7 +10,7 @@
       "autor": "Arquivista Rimk Theon",
       "data": "Ano 12 da Aliança",
       "icone": "📜",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar como o Pacto funciona no dia a dia.</em></p><p>Este artigo vai abordar:</p><ul><li>O texto original do Pacto</li><li>Como as trocas funcionam entre os mundos</li><li>Consequências práticas do Pacto</li><li>O que acontece se alguém quebra o Pacto</li></ul>"
+      "conteudo": "<p>O Pacto não é apenas um documento, é o motor do sistema.</p><h3>A Fundação</h3><ul><li>Para garantir que a Fratura nunca mais acontecesse, os líderes se reuniram em Nereida.</li><li>Assinaram o Pacto dos Quatro, criando a Aliança Rímkar.</li></ul><h3>A Regra de Ouro</h3><p>Interdependência total. Se um mundo atacar o outro, todos morrem.</p>"
     },
     {
       "numero": "201",
@@ -18,7 +18,7 @@
       "autor": "Economista Sahrin Halim",
       "data": "Ano 87 da Aliança",
       "icone": "🔄",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar quem fornece o que pra quem.</em></p><p>Este artigo vai abordar:</p><ul><li>Rimkópolis → Tecnologia</li><li>Kaal-7 → Cristais de silício</li><li>Ferrum → Ligas metálicas</li><li>Nereida → Água pura</li><li>Como cada mundo depende dos outros 3</li></ul>"
+      "conteudo": "<h3>Quem Dá, Quem Recebe</h3><ul><li><strong>Rimkópolis:</strong> dá Tech → recebe Matéria-Prima.</li><li><strong>Kaal-7:</strong> dá Cristais → recebe Água e Ferramentas.</li><li><strong>Ferrum:</strong> dá Metais → recebe Tech e Água.</li><li><strong>Nereida:</strong> dá Água → recebe Tech para manter a cidade submersa.</li></ul><h3>O Kryon</h3><p>Metal supercondutor instável do cinturão de asteroides. Quem controla o Kryon, controla a energia do sistema.</p>"
     },
     {
       "numero": "202",
@@ -26,7 +26,7 @@
       "autor": "Sociólogo Rimk Vael",
       "data": "Ano 156 da Aliança",
       "icone": "🟢",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar a sociedade cooperativista dos Rimks.</em></p><p>Este artigo vai abordar:</p><ul><li>Líder trabalhador eleito por consenso</li><li>Decisões coletivas</li><li>Educação universal</li><li>Zero pobreza, zero miséria</li><li>Filosofia: semear, não colonizar</li></ul>",
+      "conteudo": "<ul><li><strong>Sociedade:</strong> Cooperativista. Líder trabalhador eleito por consenso.</li><li>Zero pobreza, foco absoluto em educação e ciência.</li><li><strong>No Conselho da Aliança:</strong> Rimkópolis ocupa 3 cadeiras, com 3 Ministros: Vida, Mídia e Exterior.</li></ul>",
       "eixos": {
         "titulo": "Os Três Ministérios de Rimkópolis",
         "subtitulo": "O modelo político rimk se organiza em três ministérios complementares. Todos são necessários para que a vida funcione.",
@@ -55,7 +55,7 @@
       "autor": "Historiador Sahrin Vern",
       "data": "Ano 178 da Aliança",
       "icone": "🟡",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar como os Sahrin se governam.</em></p><p>Este artigo vai abordar:</p><ul><li>A escolha dos anciãos</li><li>Decisões por sabedoria ancestral</li><li>Voto ponderado por contribuição histórica</li><li>Relação com os nômades do deserto</li></ul>"
+      "conteudo": "<ul><li><strong>Sociedade:</strong> Conselho dos Anciãos. Decisões por sabedoria ancestral.</li><li><strong>Povo:</strong> Sahrin, nômades e astrônomos.</li><li><strong>No Conselho da Aliança:</strong> 1 Primeiro Astrônomo.</li></ul>"
     },
     {
       "numero": "204",
@@ -63,7 +63,7 @@
       "autor": "Cronista Ferrum Korg",
       "data": "Ano 190 da Aliança",
       "icone": "🔴",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar como os clãs de Ferrum funcionam.</em></p><p>Este artigo vai abordar:</p><ul><li>Estrutura dos clãs familiares</li><li>Líderes eleitos por mérito</li><li>Aliança entre clãs</li><li>Honra e dívida de sangue</li><li>Como se relacionam com os outros mundos</li></ul>"
+      "conteudo": "<ul><li><strong>Sociedade:</strong> Clãs de Sangue e Aço. Honra, dívida de sangue e alianças familiares.</li><li><strong>Povo:</strong> Ferrum, guerreiros e ferreiros.</li><li><strong>No Conselho da Aliança:</strong> 1 Porta-Voz dos Clãs.</li></ul>"
     },
     {
       "numero": "205",
@@ -71,7 +71,7 @@
       "autor": "Filósofo Nereid Thalassa",
       "data": "Ano 205 da Aliança",
       "icone": "🔵",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar o sistema telepático dos Nereids.</em></p><p>Este artigo vai abordar:</p><ul><li>Decisões por telepatia</li><li>Cristais de memória como registro</li><li>Porta-vozes temporários</li><li>Como a mente coletiva lida com dissidência</li><li>Desafios da Era da Sombra</li></ul>"
+      "conteudo": "<ul><li><strong>Sociedade:</strong> Mente Coletiva. Decisões por \"sentir a vontade comum\".</li><li><strong>Povo:</strong> Nereids, telepatas.</li><li><strong>No Conselho da Aliança:</strong> 1 Guardião da Memória. A sede do Conselho é o Anfiteatro de Nereida.</li></ul>"
     },
     {
       "numero": "206",
@@ -118,7 +118,7 @@
         },
         {
           "mundo": "Nereida",
-          "cor": "#00ffcc",
+          "cor": "#33ff00",
           "tipo": "Cargo Único",
           "cargo": "Guardião da Memória",
           "responsabilidades": "Representar os Nereids, arquivista chefe dos cristais vivos, guardião de toda a história galáctica registrada, conselheiro espiritual em tempos de crise."

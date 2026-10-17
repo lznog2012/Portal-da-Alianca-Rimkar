@@ -10,7 +10,7 @@
       "autor": "Arquivista Rimk Lumen",
       "data": "Ano 12 da Aliança",
       "icone": "🌱",
-      "conteudo": "<p><em>Placeholder: aqui vai contar como os Rimks foram o primeiro povo do sistema, evoluíram rapidamente e decidiram semear vida nos outros mundos.</em></p><p>Este artigo vai abordar:</p><ul><li>A origem dos Rimks em Rimkópolis</li><li>A decisão de explorar o sistema</li><li>A descoberta de condições favoráveis à vida em outros planetas</li><li>O processo de aceleração evolutiva</li></ul>"
+      "conteudo": "<ul><li><strong>Os Primeiros:</strong> O Sistema Rímkar era apenas uma estrela entre bilhões. O único planeta com vida era Rimkópolis.</li><li><strong>A Evolução Anômala:</strong> Os Rimks evoluíram numa velocidade absurda. Tornaram-se uma civilização pacífica, científica e obcecada por conhecimento.</li><li><strong>A Solidão:</strong> Ao explorarem o sistema, perceberam que os outros planetas tinham condições de vida, mas estavam no estágio primitivo (bactérias, plantas). Por solidão, os Rimks decidiram acelerar a evolução.</li><li><strong>O Dom:</strong> Eles estabilizaram atmosferas, semearam vida e deixaram tecnologia-guia. Por isso, todas as raças do sistema carregam a \"marca dos Rimks\" (genética base).</li></ul>"
     },
     {
       "numero": "002",
@@ -18,7 +18,7 @@
       "autor": "Historiador Sahrin Vern",
       "data": "Ano 210 da Semeadura",
       "icone": "🌟",
-      "conteudo": "<p><em>Placeholder: aqui vai contar a era de ouro do sistema, quando os quatro mundos estavam prósperos e em harmonia.</em></p><p>Este artigo vai abordar:</p><ul><li>A consolidação das civilizações</li><li>O início da troca de recursos</li><li>A criação das primeiras alianças</li><li>O auge da cooperação</li></ul>"
+      "conteudo": "<ul><li>As quatro civilizações (Rimks, Sahrin, Ferrum e Nereids) floresceram.</li><li>Início do comércio interplanetário e da troca de recursos.</li><li>A criação das primeiras alianças e a consolidação da cultura.</li></ul>"
     },
     {
       "numero": "003",
@@ -26,7 +26,7 @@
       "autor": "Analista Ferrum Korvin",
       "data": "Ano 341 da Semeadura",
       "icone": "👁️",
-      "conteudo": "<p><em>Placeholder: aqui vai contar sobre os Zunks chegando ao sistema pela primeira vez e começando a se infiltrar silenciosamente.</em></p><p>Este artigo vai abordar:</p><ul><li>Os primeiros sinais de algo errado</li><li>A descoberta dos metamorfos</li><li>A paranoia coletiva</li><li>Como ninguém sabia em quem confiar</li></ul>"
+      "conteudo": "<ul><li><strong>A Chegada:</strong> Seres de fora do sistema (Zunks) chegam silenciosamente.</li><li><strong>A Metamorfose:</strong> Descobre-se que eles são parasitas metamorfos. Eles copiam a aparência e a memória dos hospedeiros.</li><li><strong>A Paranoia:</strong> Ninguém sabia em quem confiar. Vizinhos, líderes e familiares poderiam ser Zunks.</li></ul>"
     },
     {
       "numero": "004",
@@ -34,7 +34,7 @@
       "autor": "Cronista Nereid Sylvaris",
       "data": "Ano 389 da Semeadura",
       "icone": "🔥",
-      "conteudo": "<p><em>Placeholder: aqui vai contar sobre as guerras que destruíram o sistema quando os mundos começaram a se acusar.</em></p><p>Este artigo vai abordar:</p><ul><li>As acusações entre os mundos</li><li>As guerras por suspeita</li><li>Os danos ambientais causados</li><li>As vidas perdidas</li></ul>"
+      "conteudo": "<ul><li><strong>O Conflito:</strong> A paranoia gerou acusações entre os mundos. O sistema mergulhou em guerras devastadoras.</li><li><strong>A Destruição:</strong> O uso de armas pesadas danificou permanentemente a crosta de Ferrum e a biosfera de Rimkópolis.</li><li><strong>A Trégua:</strong> Os quatro mundos perceberam que estavam se destruindo. Uniram forças contra os Zunks e conseguiram expurgá-los (ou pelo menos, foi o que pensaram).</li></ul>"
     },
     {
       "numero": "005",
@@ -42,7 +42,7 @@
       "autor": "Arquivista Rimk Theon",
       "data": "Ano 1 da Aliança",
       "icone": "✍️",
-      "conteudo": "<p><em>Placeholder: aqui vai contar sobre a assinatura do Pacto dos Quatro após os Zunks serem expurgados.</em></p><p>Este artigo vai abordar:</p><ul><li>A vitória contra os Zunks</li><li>A reunião dos líderes em Nereida</li><li>A assinatura do Pacto</li><li>O início da Era da Aliança</li></ul>"
+      "conteudo": "<ul><li>Para garantir que a Fratura nunca mais acontecesse, os líderes se reuniram em Nereida.</li><li>Assinaram o Pacto dos Quatro, criando a Aliança Rímkar.</li><li><strong>A regra de ouro:</strong> interdependência total. Se um mundo atacar o outro, todos morrem.</li></ul>"
     },
     {
       "numero": "006",
@@ -50,7 +50,7 @@
       "autor": "Correspondente Nereid Mira",
       "data": "Ano 847 da Aliança (AGORA)",
       "icone": "🌑",
-      "conteudo": "<p><em>Placeholder: aqui vai contar sobre o pânico atual. Os Zunks estão de volta e ninguém sabe como.</em></p><p>Este artigo vai abordar:</p><ul><li>Os novos sinais de infiltração</li><li>O medo coletivo</li><li>As simulações de treinamento</li><li>O futuro incerto do sistema</li></ul>"
+      "conteudo": "<ul><li>847 anos de paz se passaram.</li><li>Recentemente, sinais sutis de atividade Zunk foram detectados.</li><li>A população está em pânico velado. Os Zunks nunca foram embora; eles estavam apenas se recompondo.</li><li><strong>O Treinamento:</strong> Para preparar os cidadãos, o Conselho instituiu as simulações (os jogos Dedução e Ludo).</li></ul>"
     }
   ]
 }

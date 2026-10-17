@@ -10,7 +10,7 @@
       "autor": "Instrutor Rimk Vayle",
       "data": "Ano 802 da Aliança",
       "icone": "🎯",
-      "conteudo": "<p><em>Placeholder: aqui vai explicar o que são as simulações oficiais.</em></p><p>Este artigo vai abordar:</p><ul><li>O que são as simulações</li><li>Por que foram criadas</li><li>Como funcionam</li><li>Quem pode participar</li><li>Consequências reais de desempenho</li></ul>"
+      "conteudo": "<p>Para preparar os cidadãos diante do retorno dos Zunks, o Conselho instituiu as simulações oficiais da Aliança: os jogos <strong>Dedução</strong> e <strong>Ludo</strong>.</p>"
     },
     {
       "numero": "301",
@@ -18,7 +18,7 @@
       "autor": "Instrutor Rimk Vayle",
       "data": "Ano 843 da Aliança",
       "icone": "🎭",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar o Jogo da Dedução.</em></p><p>Este artigo vai abordar:</p><ul><li>Contexto: pânico pela volta dos Zunks</li><li>Propósito: treinar identificação de infiltrados</li><li>Como funciona (regras resumidas)</li><li>Lore in-game</li><li>Como se destacar nas simulações</li></ul>"
+      "conteudo": "<p><strong>Treinamento obrigatório.</strong> O objetivo é identificar os Zunks infiltrados debatendo e votando. É uma simulação de vida ou morte.</p>"
     },
     {
       "numero": "302",
@@ -26,7 +26,7 @@
       "autor": "Comentarista Sahrin Ravi",
       "data": "Ano 844 da Aliança",
       "icone": "🎲",
-      "conteudo": "<p><em>Placeholder: aqui vai detalhar o Ludo da Aliança.</em></p><p>Este artigo vai abordar:</p><ul><li>Contexto: é como uma Copa do Mundo entre os mundos</li><li>Propósito: diplomacia + competição amistosa</li><li>Modo A: torneio interno</li><li>Modo B: simulação de infiltração</li><li>Prestígio político e hierarquia</li></ul>"
+      "conteudo": "<p>A \"Copa do Mundo\" da Aliança. Um torneio diplomático que usa peões das 4 raças.</p><p>No modo 2v2, simula a união das raças (Rimk + Nereid) contra Zunks infiltrados (Thrakk + Vharn).</p>"
     }
   ]
 }
