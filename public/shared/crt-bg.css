@@ -1,4 +1,24 @@
 /* ============================================
+   FONTE DO SITE — Exo 2 (mesma da Rimk Radio)
+   Pra trocar a fonte do site inteiro, mude só a variavel --fonte.
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+:root { --fonte: 'Exo 2', 'Segoe UI', Roboto, Arial, sans-serif; }
+
+body { font-family: var(--fonte); }
+
+/* Titulos, botoes e abas em negrito itálico, como na Rádio */
+h1, h2, h3, h4, h5, h6,
+button,
+.topbar-brand, .topbar-btn,
+.servico-nome, .servico-cta,
+.back-btn {
+  font-style: italic;
+  font-weight: 700;
+}
+
+/* ============================================
    FUNDO CRT ANIMADO — compartilhado por todas as páginas
    Tudo aqui fica ATRÁS do conteúdo (z-index: -1).
    Link este arquivo DEPOIS do CSS da página.
