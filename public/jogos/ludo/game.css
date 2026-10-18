@@ -7,7 +7,7 @@
   --gold-yellow: #ffcc00;
   --ghost-purple: #aa66ff;
 }
-* { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+* { box-sizing: border-box; font-family: var(--fonte); }
 body {
   background: radial-gradient(circle at center, #0a1820 0%, #020508 100%);
   color: var(--matrix-green);
@@ -1197,7 +1197,7 @@ button.ready-btn.active { background: var(--cyan-glow); color: #000; }
   border-radius: 10px;
   padding: 16px 30px;
   color: #fff;
-  font-family: 'Courier New', monospace;
+  font-family: var(--fonte);
   font-size: 1em;
   letter-spacing: 2px;
   text-align: center;
