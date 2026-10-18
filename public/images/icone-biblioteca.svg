@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <g transform="translate(25 0) scale(0.8)">
+    <path fill="#96ff00" d="M127 65C165 65 193 95 193 131C193 175 160 205 142 224C136 231 118 231 112 224C94 205 60 175 60 131C60 95 89 65 127 65Z"/>
+    <path fill="#171716" d="M66 124C90 120 114 138 119 162C96 168 70 152 66 124Z"/>
+    <path fill="#171716" d="M187 124C163 120 139 138 134 162C157 168 183 152 187 124Z"/>
+    <path fill="#e4e2dd" opacity=".9" d="M76 129C84 127 92 130 97 135C90 133 82 133 76 129Z"/>
+    <path fill="#e4e2dd" opacity=".9" d="M177 129C169 127 161 130 156 135C163 133 171 133 177 129Z"/>
+    <g transform="translate(0 9)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="10" d="M88 167C96 181 116 178 126 171C136 178 156 181 164 167"/><circle cx="85" cy="163" r="4.5" fill="#000" stroke="none"/><circle cx="167" cy="163" r="4.5" fill="#000" stroke="none"/></g>
+  </g>
+  <!-- capelo -->
+  <path fill="#171716" d="M94 56V76C94 87 162 87 162 76V56Z"/>
+  <path fill="#000" d="M128 22L208 46L128 70L48 46Z"/>
+  <path fill="#3a3a36" d="M128 22L208 46L204 47.2L128 26Z"/>
+  <path d="M128 46L194 50V82" fill="none" stroke="#ffcc00" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path fill="#ffcc00" d="M188 80H200L203 98H185Z"/>
+  <circle cx="128" cy="46" r="5" fill="#ffcc00"/>
+  <!-- pilha de livros -->
+  <g>
+    <rect x="24" y="224" width="208" height="26" rx="6" fill="#ff7a1a"/>
+    <rect x="44" y="230" width="180" height="14" rx="3" fill="#e4e2dd"/>
+    <path d="M52 235H216M52 240H216" stroke="#b9b6ae" stroke-width="1.5"/>
+    <rect x="24" y="224" width="16" height="26" rx="6" fill="#d95f08"/>
+
+    <rect x="40" y="198" width="176" height="26" rx="6" fill="#00bcd0"/>
+    <rect x="62" y="204" width="146" height="14" rx="3" fill="#e4e2dd"/>
+    <path d="M70 209H200M70 214H200" stroke="#b9b6ae" stroke-width="1.5"/>
+    <rect x="40" y="198" width="16" height="26" rx="6" fill="#0097a8"/>
+
+    <rect x="58" y="172" width="140" height="26" rx="6" fill="#ffcc00"/>
+    <rect x="80" y="178" width="110" height="14" rx="3" fill="#e4e2dd"/>
+    <path d="M88 183H182M88 188H182" stroke="#b9b6ae" stroke-width="1.5"/>
+    <rect x="58" y="172" width="16" height="26" rx="6" fill="#d9a700"/>
+  </g>
+</svg>
