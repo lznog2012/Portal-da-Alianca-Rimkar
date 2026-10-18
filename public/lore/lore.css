@@ -17,7 +17,7 @@
   --shadow-strong: 0 0 30px rgba(153,255,0, 0.4);
 }
 
-* { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+* { box-sizing: border-box; font-family: var(--fonte); }
 
 body {
   background: radial-gradient(circle at center, #0a1820 0%, #020508 100%);
