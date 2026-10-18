@@ -487,3 +487,23 @@ function attachSoundsPortal() {
   var dias = DIAS_NA_ANCORA + Math.max(0, Math.round((d1 - d0) / 86400000));
   el.textContent = 'Há ' + dias + (dias === 1 ? ' dia' : ' dias');
 })();
+
+/* ===== Relógio "Última atualização" =====
+   Sempre no horário de Brasília (America/Sao_Paulo), não importa onde
+   a pessoa esteja ou a hora do computador dela. Atualiza sozinho. */
+(function () {
+  var el = document.getElementById('ultimaAtualizacao');
+  if (!el) return;
+  var fmt = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+  function tick() {
+    var texto = 'Hoje · ' + fmt.format(new Date());
+    if (el.textContent !== texto) el.textContent = texto;
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
