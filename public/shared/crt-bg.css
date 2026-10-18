@@ -1,0 +1,81 @@
+/* ============================================
+   FUNDO CRT ANIMADO — compartilhado por todas as páginas
+   Tudo aqui fica ATRÁS do conteúdo (z-index: -1).
+   Link este arquivo DEPOIS do CSS da página.
+   ============================================ */
+
+/* Cor base sólida (os gradientes vêm das camadas animadas) */
+body { background: #050802; }
+
+/* CAMADA 1 — gradiente que se mexe bem devagar */
+html::before {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 40% at 30% 20%, rgba(153,255,0,0.16), transparent 70%),
+    radial-gradient(ellipse 45% 45% at 75% 35%, rgba(255,204,0,0.07), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 90%, rgba(0,255,120,0.07), transparent 70%);
+  animation: crtBgDrift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes crtBgDrift {
+  0%   { transform: translate3d(-4%, -3%, 0) scale(1); }
+  50%  { transform: translate3d(3%, 4%, 0)   scale(1.08); }
+  100% { transform: translate3d(5%, -2%, 0)  scale(1.02); }
+}
+
+/* CAMADA 2 — faixa de varredura descendo de cima pra baixo */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 22vh;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(153,255,0,0.05) 45%,
+    rgba(153,255,0,0.10) 50%,
+    rgba(153,255,0,0.05) 55%,
+    transparent 100%);
+  transform: translateY(-30vh);
+  animation: crtRoll 9s linear infinite;
+  will-change: transform;
+}
+@keyframes crtRoll {
+  0%   { transform: translateY(-30vh); }
+  100% { transform: translateY(110vh); }
+}
+
+/* CAMADA 3 — scanlines + vinheta + cintilar */
+html::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%),
+    repeating-linear-gradient(0deg,
+      rgba(0,0,0,0.22) 0,
+      rgba(0,0,0,0.22) 1px,
+      transparent 1px,
+      transparent 3px);
+  animation: crtFlicker 5s steps(1, end) infinite;
+}
+@keyframes crtFlicker {
+  0%, 100% { opacity: 1; }
+  47%      { opacity: 0.94; }
+  48%      { opacity: 1; }
+  80%      { opacity: 0.96; }
+  81%      { opacity: 1; }
+}
+
+/* Menos movimento = fundo parado */
+@media (prefers-reduced-motion: reduce) {
+  html::before, html::after, body::after { animation: none; }
+  body::after { display: none; }
+}
