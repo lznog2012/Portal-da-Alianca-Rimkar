@@ -20,7 +20,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--fonte);
   background: #050802; /* cor base solida: o gradiente agora vive em html::before */
   color: var(--text-primary);
   min-height: 100vh;
@@ -207,7 +207,7 @@ body::before {
 }
 
 .portal-title {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--fonte);
   font-size: 2.2em;
   color: var(--gold-imperial);
   letter-spacing: 6px;
@@ -266,7 +266,7 @@ body::before {
 }
 
 .section-title {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--fonte);
   font-size: 1.05em;
   color: var(--matrix-green);
   letter-spacing: 4px;
@@ -426,9 +426,16 @@ body::before {
 }
 
 .servico-icon {
-  font-size: 3em;
-  filter: drop-shadow(0 0 15px currentColor);
   transition: transform 0.3s;
+}
+
+.servico-icon img {
+  display: block;
+  width: 104px;
+  height: 104px;
+  margin: 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 14px rgba(150,255,0,0.35));
 }
 
 .servico-card:hover .servico-icon {
@@ -436,7 +443,7 @@ body::before {
 }
 
 .servico-nome {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--fonte);
   font-size: 1.05em;
   color: var(--gold-imperial);
   letter-spacing: 3px;
@@ -513,7 +520,7 @@ body::before {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--fonte);
   font-size: 1.5em;
   color: var(--threat-low);
   letter-spacing: 4px;
