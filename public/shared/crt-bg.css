@@ -47,21 +47,23 @@ html::before {
   100% { transform: translate3d(5%, -2%, 0)  scale(1.02); }
 }
 
-/* CAMADA 2 — faixa de varredura descendo de cima pra baixo */
+/* CAMADA 2 — faixa de brilho que desce, como numa TV de tubo (igual à Rádio) */
 body::after {
-   content: '';
-   left: 0; right: 0; top: 0;
-   height: 18vh;
-   z-index: -1;
-   pointer-events: none;
-   background: linear-gradient(to bottom, transparent, rgba(153,255,0,.07), transparent);
-   animation: crtRoll 7s linear infinite;
-   will -change: transform;
+  content: '';
+  position: fixed;
+  left: 0; right: 0; top: 0;
+  height: 18vh;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(153,255,0,.07), transparent);
+  animation: crtRoll 7s linear infinite;
+  will-change: transform;
 }
 @keyframes crtRoll {
-   from { transform: translateY(-20vh); }
-   to   { transform: translateY(100vh); }
-}   
+  from { transform: translateY(-20vh); }
+  to   { transform: translateY(100vh); }
+}
+
 /* CAMADA 3 — scanlines + vinheta + cintilar */
 html::after {
   content: '';
