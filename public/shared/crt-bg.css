@@ -48,25 +48,31 @@ html::before {
 }
 
 /* CAMADA 2 — faixa de varredura descendo de cima pra baixo */
+:root { --crt-faixa-brilho: 0.028; }
+
 body::after {
   content: '';
   position: fixed;
   inset: 0 0 auto 0;
-  height: 22vh;
+  height: 38vh;
   z-index: -1;
   pointer-events: none;
   background: linear-gradient(180deg,
-    transparent 0%,
-    rgba(153,255,0,0.05) 45%,
-    rgba(153,255,0,0.10) 50%,
-    rgba(153,255,0,0.05) 55%,
-    transparent 100%);
-  transform: translateY(-30vh);
-  animation: crtRoll 9s linear infinite;
+    rgba(153,255,0,0) 0%,
+    rgba(153,255,0,calc(var(--crt-faixa-brilho) * 0.10)) 12%,
+    rgba(153,255,0,calc(var(--crt-faixa-brilho) * 0.35)) 28%,
+    rgba(153,255,0,calc(var(--crt-faixa-brilho) * 0.75)) 42%,
+    rgba(153,255,0,var(--crt-faixa-brilho)) 50%,
+    rgba(153,255,0,calc(var(--crt-faixa-brilho) * 0.75)) 58%,
+    rgba(153,255,0,calc(var(--crt-faixa-brilho) * 0.35)) 72%,
+    rgba(153,255,0,calc(var(--crt-faixa-brilho) * 0.10)) 88%,
+    rgba(153,255,0,0) 100%);
+  transform: translateY(-45vh);
+  animation: crtRoll 14s linear infinite;
   will-change: transform;
 }
 @keyframes crtRoll {
-  0%   { transform: translateY(-30vh); }
+  0%   { transform: translateY(-45vh); }
   100% { transform: translateY(110vh); }
 }
 
@@ -78,10 +84,10 @@ html::after {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.25) 100%),
     repeating-linear-gradient(0deg,
-      rgba(0,0,0,0.22) 0,
-      rgba(0,0,0,0.22) 1px,
+      rgba(0,0,0,0.16) 0,
+      rgba(0,0,0,0.16) 1px,
       transparent 1px,
       transparent 3px);
   animation: crtFlicker 5s steps(1, end) infinite;
