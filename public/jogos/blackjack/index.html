@@ -78,7 +78,8 @@
           <li><b>Dobrar:</b> dobra a aposta, recebe só mais 1 carta. <b>Dividir:</b> pares viram 2 mãos (até 4).</li>
           <li><b>Seguro:</b> se o Dealer mostra um Ás, aposte metade para se proteger de blackjack (paga 2:1).</li>
           <li><b>Desistir:</b> na 1ª decisão, recupera metade da aposta.</li>
-          <li>Todo mundo começa com 🪙 1000. Aposta de 10 a 500. Zerou? Você ganha fichas novas.</li>
+          <li>Todo mundo começa com 🪙 1000. Aposta de 10 a 500. Acabaram as fichas? Você continua no <b>fiado</b> (saldo negativo), mas se passar de <b>-1000</b> é <b>expulso da mesa</b>.</li>
+          <li>Ganhou mais de 5 rodadas seguidas? O Thrakk da segurança vem ver o que está acontecendo. 👀</li>
         </ul>
       </details>
     </div>
@@ -138,7 +139,10 @@
         <div class="table-col">
           <div class="felt" id="felt">
             <div class="dealer-zone">
-              <div class="zone-label">🛸 DEALER</div>
+              <div class="dealer-head">
+                <div class="dealer-av" id="dealerAv"></div>
+                <div class="dealer-id"><div class="zone-label">DEALER</div><b>Thrakk</b></div>
+              </div>
               <div class="cards" id="dealerCards"></div>
               <div class="hand-info" id="dealerInfo"></div>
             </div>
@@ -167,6 +171,17 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- THRAKK DA SEGURANÇA (aparece quando alguém passa de 5 vitórias seguidas) -->
+  <div id="alarmFlash" class="alarm-flash"></div>
+  <div id="security" class="security" aria-live="polite">
+    <div class="sec-bubble" id="secBubble"></div>
+    <div class="sec-body">
+      <div class="sec-lights"><i></i><i></i></div>
+      <div class="sec-av" id="secAv"></div>
+      <div class="sec-tag">🚨 SEGURANÇA</div>
+    </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>

@@ -255,3 +255,44 @@ button:disabled { opacity: 0.4; cursor: not-allowed; border-color: #444; color: 
   .result-banner { font-size: 1.1em; padding: 10px 18px; }
   .hands.multi .card { --cw: 38px; }
 }
+
+
+/* DEALER THRAKK */
+.dealer-head { display: flex; align-items: center; gap: 12px; }
+.dealer-av { width: 84px; height: 84px; border-radius: 14px; overflow: hidden; border: 2px solid #1d5a38; background: radial-gradient(circle at 50% 30%, #17402a, #07170f); box-shadow: 0 0 18px rgba(0,255,150,.18); transition: .3s; position: relative; }
+.dealer-av.active { border-color: var(--gold-yellow); box-shadow: 0 0 22px rgba(255,204,0,.55); }
+.dealer-av.bust { animation: shake .5s; border-color: var(--alert-red); }
+.dealer-av .av { border-radius: 12px; }
+.dealer-id { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
+.dealer-id b { color: #d6ffe9; letter-spacing: 2px; text-transform: uppercase; font-size: .95em; }
+@keyframes shake { 20% { transform: translateX(-5px) rotate(-3deg); } 40% { transform: translateX(5px) rotate(3deg); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+
+/* SALDO NEGATIVO */
+.seat-chips.neg, .neg-text { color: var(--alert-red) !important; text-shadow: 0 0 8px rgba(255,51,102,.55); }
+.debt-warn { background: rgba(255,51,102,.12); border: 1px solid var(--alert-red); color: #ff8fa8; border-radius: 8px; padding: 6px 12px; font-size: .8em; max-width: 520px; }
+.streak-tag { display: inline-block; font-size: .72em; color: #ffb347; background: rgba(255,140,0,.12); border: 1px solid #ff9a3c; border-radius: 10px; padding: 0 7px; margin-left: 4px; }
+
+/* THRAKK DA SEGURANÇA */
+.alarm-flash { position: fixed; inset: 0; pointer-events: none; z-index: 4990; opacity: 0; box-shadow: inset 0 0 120px 20px rgba(255,30,60,.55); }
+.alarm-flash.on { animation: alarm 2.4s ease-out; }
+@keyframes alarm { 0%,30%,60% { opacity: 1; } 15%,45%,75% { opacity: .15; } 100% { opacity: 0; } }
+.security { position: fixed; left: 0; bottom: 0; z-index: 5000; pointer-events: none; display: flex; align-items: flex-end; gap: 0; transform: translateX(-130%); padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
+.security.show { animation: secWalk 5.2s cubic-bezier(.2,.9,.25,1) forwards; }
+@keyframes secWalk { 0% { transform: translateX(-130%); } 14% { transform: translateX(0); } 88% { transform: translateX(0); } 100% { transform: translateX(-130%); } }
+.sec-body { position: relative; display: flex; flex-direction: column; align-items: center; width: 150px; }
+.sec-av { width: 140px; height: 140px; border-radius: 18px; overflow: hidden; border: 3px solid #4da3ff; background: radial-gradient(circle at 50% 30%, #1b2f55, #0a1226); box-shadow: 0 0 28px rgba(77,163,255,.6); }
+.security.show .sec-av { animation: bob .45s ease-in-out 3, stare 1s ease-in-out 1.4s 2; }
+@keyframes bob { 50% { transform: translateY(-8px) rotate(2deg); } }
+@keyframes stare { 50% { transform: scale(1.06); } }
+.sec-av .av { border-radius: 14px; }
+.sec-tag { margin-top: 6px; font-size: .72em; font-weight: 900; letter-spacing: 2px; color: #fff; background: #1d4fa8; border: 1px solid #4da3ff; padding: 2px 10px; border-radius: 6px; }
+.sec-lights { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
+.sec-lights i { width: 22px; height: 12px; border-radius: 8px 8px 0 0; background: #ff2b4d; box-shadow: 0 0 16px 4px #ff2b4d; animation: siren .35s steps(2) infinite; }
+.sec-lights i + i { background: #2b7bff; box-shadow: 0 0 16px 4px #2b7bff; animation-delay: .175s; }
+@keyframes siren { 50% { opacity: .15; } }
+.sec-bubble { align-self: flex-start; margin: 0 0 90px 8px; max-width: 260px; background: #fff; color: #111; font-weight: 800; font-size: 1.05em; line-height: 1.25; padding: 12px 16px; border-radius: 16px 16px 16px 4px; box-shadow: 0 6px 24px rgba(0,0,0,.6); position: relative; transform-origin: left bottom; opacity: 0; font-style: italic; }
+.sec-bubble small { display: block; font-size: .65em; font-weight: 600; color: #555; margin-top: 4px; font-style: normal; }
+.security.show .sec-bubble { animation: bubbleIn .35s cubic-bezier(.2,1.4,.4,1) .55s forwards; }
+@keyframes bubbleIn { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@media (max-width: 600px) { .sec-av { width: 96px; height: 96px; } .sec-body { width: 100px; } .sec-bubble { max-width: 190px; font-size: .9em; margin-bottom: 60px; } }
+@media (prefers-reduced-motion: reduce) { .security.show { animation-duration: 5.2s; } .security.show .sec-av, .sec-lights i, .alarm-flash.on { animation: none; } }

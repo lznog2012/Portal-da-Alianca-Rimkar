@@ -69,7 +69,9 @@ const SOUNDS = {
   lose: () => seq([[400, 0.16, 'sawtooth'], [300, 0.16, 'sawtooth'], [200, 0.36, 'sawtooth']]),
   push: () => seq([[600, 0.1, 'triangle'], [600, 0.14, 'triangle']]),
   bust: () => seq([[300, 0.1, 'sawtooth'], [150, 0.3, 'sawtooth']]),
-  chat: () => beep(1500, 0.03, 'sine', 0.03)
+  chat: () => beep(1500, 0.03, 'sine', 0.03),
+  siren: () => { [0, 0.28, 0.56, 0.84].forEach((t, i) => beep(i % 2 ? 640 : 880, 0.26, 'square', 0.04, t)); beep(180, 0.5, 'sawtooth', 0.04, 1.2); },
+  kick: () => seq([[300, 0.18, 'sawtooth'], [220, 0.18, 'sawtooth'], [120, 0.5, 'square']])
 };
 function toggleSound() {
   soundEnabled = !soundEnabled;
@@ -96,6 +98,13 @@ function generateAvatarHTML(c) {
   if (layered) return `<div style="position:relative;width:100%;height:100%;border-radius:inherit;overflow:hidden;">${layered}</div>`;
   const raceFile = RACE_FILES[c.race] || RACE_FILES.Rimk;
   return `<div style="position:relative;width:100%;height:100%;background:#000;"><img src="/images/${raceFile}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;" alt=""></div>`;
+}
+// Thrakk do Dealer e Thrakk da segurança (personagem "thraak" dos arquivos de avatar)
+const DEALER_LOOK = { b: 'thraak', bg: null, i: ['olhos-scanner', 'roupa-bandana'] };
+const SECURITY_LOOK = { b: 'thraak', bg: null, i: ['olhos-cool', 'fone-fone'] };
+function paintThrakks() {
+  const d = $('dealerAv'); if (d) d.innerHTML = generateAvatarHTML(DEALER_LOOK);
+  const s = $('secAv'); if (s) s.innerHTML = generateAvatarHTML(SECURITY_LOOK);
 }
 function updatePreview() { const b = $('avatarPreview'); if (b) b.innerHTML = generateAvatarHTML(getStoredAvatar()); }
 
@@ -303,6 +312,8 @@ function renderTable(st) {
       : `<span class="total${d.total === 21 ? ' twentyone' : ''}">${d.soft && d.total < 21 && d.cards.length > 1 && d.reveal ? (d.total - 10) + '/' + d.total : d.total}</span>`;
   }
   $('dealerInfo').innerHTML = di;
+  const dav = $('dealerAv');
+  if (dav) { dav.classList.toggle('active', st.phase === 'DEALER' || st.phase === 'PEEK'); dav.classList.toggle('bust', !!d.bust); }
 
   // ----- Assentos -----
   $('seats').innerHTML = st.players.filter(p => !p.gone || p.hands.length).map(p => seatHTML(p, st)).join('');
@@ -348,7 +359,7 @@ function seatHTML(p, st) {
   return `<div class="${cls}">
     <div class="seat-head">
       <div class="seat-av">${p.isBot ? '🤖' : generateAvatarHTML(p.avatar)}</div>
-      <div><div class="seat-name">${esc(p.name)}${p.isHost ? ' 👑' : ''}</div><div class="seat-chips">🪙 ${p.chips}${p.id === myId ? ' · <span style="color:var(--cyan-glow)">você</span>' : ''}</div></div>
+      <div><div class="seat-name">${esc(p.name)}${p.isHost ? ' 👑' : ''}</div><div class="seat-chips${p.chips < 0 ? ' neg' : ''}">🪙 ${p.chips}${p.chips < 0 ? ' (fiado)' : ''}${p.id === myId ? ' · <span style="color:var(--cyan-glow)">você</span>' : ''}${p.streak >= 3 ? `<span class="streak-tag">🔥 ${p.streak}</span>` : ''}</div></div>
     </div>
     <div class="seat-bet">${betTxt}</div>
     ${body}
@@ -373,7 +384,7 @@ function renderControls(st, me) {
   if (st.phase === 'BETTING') {
     if (me.status !== 'active') return set('<div class="ctrl-title">AGUARDE</div><div class="ctrl-sub">Você entra na próxima rodada.</div>');
     if (me.betLocked) return set(`<div class="ctrl-title">APOSTA CONFIRMADA</div><div class="bet-display">🪙 ${me.bet}</div><div class="ctrl-sub">Aguardando os outros jogadores...</div>`);
-    const maxBet = Math.min(lim.max, me.chips);
+    const maxBet = lim.max;       // pode apostar no fiado (saldo negativo)
     if (pendingBet > maxBet) pendingBet = maxBet;
     const chips = [10, 20, 50, 100, 500].map(v => `<button class="chip c${v}" onclick="addChip(${v})" ${pendingBet + v > maxBet ? 'disabled' : ''}>${v}</button>`).join('');
     return set(`
@@ -382,17 +393,17 @@ function renderControls(st, me) {
       <div class="bet-display">🪙 ${pendingBet}</div>
       <div class="btn-row">
         <button onclick="clearBet()" ${pendingBet ? '' : 'disabled'}>🧹 LIMPAR</button>
-        <button onclick="repeatBet()" ${lastBet && lastBet <= maxBet ? '' : 'disabled'}>🔁 REPETIR ${lastBet || ''}</button>
+        <button onclick="repeatBet()" ${lastBet ? '' : 'disabled'}>🔁 REPETIR ${lastBet || ''}</button>
         <button onclick="allInBet()">⬆ MÁXIMO</button>
         <button class="act-hit" onclick="confirmBet()" ${pendingBet >= lim.min ? '' : 'disabled'}>✔ APOSTAR</button>
       </div>
-      <div class="ctrl-sub">Suas fichas: 🪙 ${me.chips}</div>`);
+      ${balanceLine(me, st)}`);
   }
 
   if (st.phase === 'INSURANCE') {
     if (me.betLocked && !me.insuranceAnswered) {
       const cost = me.bet / 2;
-      const ok = me.chips >= cost && !(me.hands[0] && me.hands[0].bj);
+      const ok = !(me.hands[0] && me.hands[0].bj);
       return set(`
         <div class="ctrl-title">🛡 O DEALER MOSTRA UM ÁS</div>
         <div class="ctrl-sub">Quer pagar o seguro de 🪙 ${cost}? Se o Dealer tiver blackjack, ele paga 2:1.</div>
@@ -408,8 +419,8 @@ function renderControls(st, me) {
     const h = me.hands[st.turn.hand];
     if (h && !h.done) {
       const two = h.cards.length === 2;
-      const canDouble = two && !h.splitAces && me.chips >= h.bet;
-      const canSplit = two && !h.splitAces && me.hands.length < 4 && rankVal(h.cards[0].r) === rankVal(h.cards[1].r) && me.chips >= h.bet;
+      const canDouble = two && !h.splitAces;
+      const canSplit = two && !h.splitAces && me.hands.length < 4 && rankVal(h.cards[0].r) === rankVal(h.cards[1].r);
       const canSurr = me.hands.length === 1 && two && !h.surrendered && st.dealer.cards.length === 2 && !h.acted;
       const label = me.hands.length > 1 ? `Mão ${st.turn.hand + 1} de ${me.hands.length}` : 'Sua jogada';
       return set(`
@@ -421,7 +432,7 @@ function renderControls(st, me) {
           <button class="act-btn act-split" onclick="act('split')" ${canSplit ? '' : 'disabled'}>DIVIDIR<small>[P]</small></button>
           <button class="act-btn act-surr" onclick="act('surrender')" ${canSurr ? '' : 'disabled'}>DESISTIR<small>[R]</small></button>
         </div>
-        <div class="ctrl-sub">Aposta nesta mão: 🪙 ${h.bet} · Fichas livres: 🪙 ${me.chips}</div>`);
+        <div class="ctrl-sub">Aposta nesta mão: 🪙 ${h.bet} · Saldo: <span class="${me.chips < 0 ? 'neg-text' : ''}">🪙 ${me.chips}</span></div>`);
     }
   }
 
@@ -429,26 +440,31 @@ function renderControls(st, me) {
     const nxt = '<div class="ctrl-sub">Próxima rodada já já...</div>';
     if (me.betLocked || me.hands.length) {
       const n = me.roundNet;
-      return set(`<div class="ctrl-title">${n > 0 ? '🏆 VOCÊ GANHOU ' + n : n < 0 ? '💀 VOCÊ PERDEU ' + Math.abs(n) : '🤝 EMPATE'}</div><div class="bet-display">🪙 ${me.chips}</div>${nxt}`);
+      return set(`<div class="ctrl-title">${n > 0 ? '🏆 VOCÊ GANHOU ' + n : n < 0 ? '💀 VOCÊ PERDEU ' + Math.abs(n) : '🤝 EMPATE'}</div><div class="bet-display ${me.chips < 0 ? 'neg-text' : ''}">🪙 ${me.chips}</div>${me.chips < st.limits.debt ? '<div class="debt-warn">💸 Você passou do limite de ' + st.limits.debt + ' e será expulso da mesa.</div>' : ''}${nxt}`);
     }
     return set(`<div class="ctrl-title">RODADA ENCERRADA</div>${nxt}`);
   }
 
   const who = st.phase === 'PLAYER' && st.turn ? (st.players.find(p => p.id === st.turn.id) || {}).name : '';
   const msg = st.phase === 'PLAYER' ? `Aguardando ${esc(who || 'jogador')}...` : (PHASE_TXT[st.phase] || '...');
-  set(`<div class="ctrl-title">${msg}</div><div class="ctrl-sub">Suas fichas: 🪙 ${me.chips}</div>`);
+  set(`<div class="ctrl-title">${msg}</div>${balanceLine(me, st)}`);
+}
+function balanceLine(me, st) {
+  const neg = me.chips < 0;
+  return `<div class="ctrl-sub">Seu saldo: <b class="${neg ? 'neg-text' : ''}">🪙 ${me.chips}</b></div>` +
+    (neg ? `<div class="debt-warn">⚠️ Você está no negativo (fiado). Se passar de ${st.limits.debt} fichas, é expulso da mesa!</div>` : '');
 }
 
 function addChip(v) {
   if (!S) return;
   const me = S.players.find(p => p.id === myId); if (!me) return;
-  const maxBet = Math.min(S.limits.max, me.chips);
+  const maxBet = S.limits.max;
   if (pendingBet + v > maxBet) return;
   pendingBet += v; SOUNDS.chip(); renderControls(S, me);
 }
 function clearBet() { pendingBet = 0; const me = S && S.players.find(p => p.id === myId); if (me) renderControls(S, me); }
-function repeatBet() { if (!S) return; const me = S.players.find(p => p.id === myId); if (!me) return; pendingBet = Math.min(lastBet, S.limits.max, me.chips); SOUNDS.chip(); renderControls(S, me); }
-function allInBet() { if (!S) return; const me = S.players.find(p => p.id === myId); if (!me) return; pendingBet = Math.floor(Math.min(S.limits.max, me.chips) / 10) * 10; SOUNDS.chip(); renderControls(S, me); }
+function repeatBet() { if (!S) return; const me = S.players.find(p => p.id === myId); if (!me) return; pendingBet = Math.min(lastBet, S.limits.max); SOUNDS.chip(); renderControls(S, me); }
+function allInBet() { if (!S) return; const me = S.players.find(p => p.id === myId); if (!me) return; pendingBet = S.limits.max; SOUNDS.chip(); renderControls(S, me); }
 function confirmBet() {
   if (!S || !currentRoom || pendingBet < S.limits.min) return;
   lastBet = pendingBet;
@@ -493,7 +509,7 @@ function onRoundResult(st, me) {
 function loadStats() {
   let s = {};
   try { s = JSON.parse(safeLS.get(STORAGE.stats) || '{}'); } catch (e) {}
-  return Object.assign({ rounds: 0, wins: 0, losses: 0, pushes: 0, blackjacks: 0, busts: 0, bestWin: 0, net: 0, peak: 0 }, s);
+  return Object.assign({ rounds: 0, wins: 0, losses: 0, pushes: 0, blackjacks: 0, busts: 0, bestWin: 0, net: 0, peak: 0, bestStreak: 0, low: 0 }, s);
 }
 function recordStats(st, me) {
   if (statsRound === st.round + ':' + st.code) return;
@@ -506,6 +522,8 @@ function recordStats(st, me) {
   s.bestWin = Math.max(s.bestWin, me.roundNet);
   s.net += me.roundNet;
   s.peak = Math.max(s.peak, me.chips);
+  s.low = Math.min(s.low, me.chips);
+  s.bestStreak = Math.max(s.bestStreak, me.streak || 0);
   safeLS.set(STORAGE.stats, JSON.stringify(s));
   renderStats();
 }
@@ -514,8 +532,23 @@ function renderStats() {
   const pct = s.rounds ? Math.round(s.wins / s.rounds * 100) : 0;
   box.innerHTML = [
     [s.rounds, 'Rodadas'], [pct + '%', 'Vitórias'], [s.blackjacks, 'Blackjacks'], [s.busts, 'Estouros'],
-    [s.bestWin, 'Maior ganho'], [s.peak, 'Pico de fichas']
+    [s.bestWin, 'Maior ganho'], [s.peak, 'Pico de fichas'], [s.bestStreak, 'Maior sequência'], [s.low, 'Pior saldo']
   ].map(x => `<div class="stat"><b>${x[0]}</b><small>${x[1]}</small></div>`).join('');
+}
+
+// ========== THRAKK DA SEGURANÇA ==========
+let secTimer = null;
+function showSecurity(d) {
+  const el = $('security'), bub = $('secBubble'), flash = $('alarmFlash');
+  if (!el || !bub) return;
+  paintThrakks();
+  bub.innerHTML = `${esc(d.phrase)}<small>${esc(d.name)} venceu ${d.streak} seguidas</small>`;
+  el.classList.remove('show'); flash.classList.remove('on');
+  void el.offsetWidth;
+  el.classList.add('show'); flash.classList.add('on');
+  SOUNDS.siren();
+  clearTimeout(secTimer);
+  secTimer = setTimeout(() => { el.classList.remove('show'); flash.classList.remove('on'); }, 5300);
 }
 
 // ========== SOCKET ==========
@@ -559,6 +592,12 @@ if (socket) {
   });
   socket.on('bjTimer', (t) => { if (S) { S.timeLeft = t; setTimerText(t); } });
 
+  socket.on('bjSecurity', (d) => showSecurity(d));
+  socket.on('bjKicked', (d) => {
+    SOUNDS.kick();
+    resetLocal(); showView('setup');
+    showToast('🚪 EXPULSO DA MESA', `Seu saldo chegou a ${d.chips} (limite ${d.limit}). A segurança te acompanhou até a saída.`, 'zunk');
+  });
   socket.on('bjLog', (m) => addLine(m.tipo || 'info', esc(m.text)));
   socket.on('bjChat', (m) => {
     const col = '#99ff00';
@@ -577,8 +616,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const name = getStoredName();
   if (name) { const input = $('username'); if (input) input.value = name; }
   updatePreview();
+  paintThrakks();
   // a conta carrega depois da página: repinta o personagem assim que o avatar chegar
-  if (window.Conta && Conta.ready && Conta.ready.then) Conta.ready.then(() => { updatePreview(); if (S) renderTable(S); }).catch(() => {});
+  if (window.Conta && Conta.ready && Conta.ready.then) Conta.ready.then(() => { updatePreview(); paintThrakks(); if (S) renderTable(S); }).catch(() => {});
   $('soundToggle').innerText = soundEnabled ? '🔊' : '🔇';
   document.addEventListener('click', () => initAudio(), { once: true });
   ['lobbyChatInput', 'gameChatInput'].forEach(id => {
