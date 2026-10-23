@@ -11,6 +11,8 @@
 //    Desistir (late surrender, só na 1ª decisão)
 //  - Ases divididos recebem só 1 carta e 21 depois de split não é blackjack
 //  - Estourou perde, mesmo que o Dealer estoure depois
+//  - Sem fichas? Dá para continuar jogando no negativo (fiado). Passou de -1000: expulso da mesa
+//  - Mais de 5 vitórias seguidas: o Thrakk da segurança aparece para investigar
 // ================================================
 
 const DECKS = 6;
@@ -25,6 +27,15 @@ const RESULT_TIME = 8;
 const DISCONNECT_GRACE = 30;
 const RESHUFFLE_AT = DECKS * 52 * 0.25;
 const MAX_HANDS = 4;
+const DEBT_LIMIT = -1000;          // saldo abaixo disso = expulso da mesa
+const SECURITY_STREAK = 5;         // "mais de 5" vitórias seguidas chama a segurança
+const SECURITY_PHRASES = [
+  'O que está acontecendo aqui?',
+  'O que houve?!',
+  'Hmm... o que está acontecendo aqui?',
+  'O que houve aqui?!',
+  'Alguém me explica o que houve?!'
+];
 
 const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 const SUITS = ['♠', '♥', '♦', '♣'];
@@ -100,7 +111,7 @@ function init(io, rooms, broadcastStats) {
   }
   function freshSeat() {
     return {
-      chips: START_CHIPS, rebuys: 0,
+      chips: START_CHIPS, streak: 0, bestStreak: 0, kick: false,
       bet: 0, betLocked: false, insurance: 0, insuranceAnswered: false,
       hands: [], status: 'waiting', roundNet: 0
     };
@@ -163,7 +174,7 @@ function init(io, rooms, broadcastStats) {
       timeLeft: room.timeLeft,
       shoeLeft: room.shoe ? room.shoe.length : 0,
       shoeTotal: DECKS * 52,
-      limits: { min: MIN_BET, max: MAX_BET, start: START_CHIPS },
+      limits: { min: MIN_BET, max: MAX_BET, start: START_CHIPS, debt: DEBT_LIMIT, securityStreak: SECURITY_STREAK },
       dealer: {
         cards: d.cards.map((c, i) => (i === 1 && !d.reveal) ? { hidden: true } : c),
         total: dt.total, soft: dt.soft, reveal: !!d.reveal,
@@ -174,7 +185,7 @@ function init(io, rooms, broadcastStats) {
       players: room.order.map(id => room.players[id]).filter(Boolean).map(p => ({
         id: p.id, name: p.name, avatar: p.avatar,
         isHost: !!p.isHost, isBot: !!p.isBot, disconnected: !!p.disconnected, gone: !!p.gone,
-        chips: p.chips, rebuys: p.rebuys, bet: p.bet, betLocked: !!p.betLocked,
+        chips: p.chips, streak: p.streak, bet: p.bet, betLocked: !!p.betLocked,
         insurance: p.insurance, insuranceAnswered: !!p.insuranceAnswered,
         status: p.status, roundNet: p.roundNet,
         hands: p.hands.map(publicHand)
@@ -217,6 +228,20 @@ function init(io, rooms, broadcastStats) {
     room.order = room.order.filter(id => room.players[id] && !room.players[id].gone);
     Object.keys(room.players).forEach(id => { if (room.players[id].gone) delete room.players[id]; });
 
+    // expulsa quem passou do limite de dívida na rodada anterior
+    live(room).filter(p => p.kick).forEach(p => {
+      log(room, `🚪 ${p.name} passou do limite de ${DEBT_LIMIT} fichas e foi expulso(a) da mesa.`, 'alert');
+      if (!p.isBot) {
+        io.to(p.id).emit('bjKicked', { chips: p.chips, limit: DEBT_LIMIT });
+        const sk = io.sockets.sockets.get(p.id);
+        if (sk) { try { sk.leave(room.code); } catch (e) {} sk.currentRoom = null; }
+      }
+      if (room.disconnectTimers[p.id]) { clearTimeout(room.disconnectTimers[p.id]); delete room.disconnectTimers[p.id]; }
+      delete room.players[p.id];
+      room.order = room.order.filter(id => id !== p.id);
+      if (room.hostId === p.id) pickNewHost(room);
+    });
+
     if (!humans(room).length) return destroyRoom(room);
 
     if (!room.shoe || room.shoe.length < RESHUFFLE_AT) {
@@ -230,10 +255,11 @@ function init(io, rooms, broadcastStats) {
     room.phase = 'BETTING';
 
     live(room).forEach(p => {
-      if (p.chips < MIN_BET) {
-        p.chips = START_CHIPS; p.rebuys++;
-        log(room, `💰 ${p.name} ficou sem fichas e recebeu ${START_CHIPS} novas.`, 'warn');
+      if (p.chips < 0 && p.chips >= DEBT_LIMIT && !p.warnedDebt) {
+        p.warnedDebt = true;
+        log(room, `⚠️ ${p.name} está no negativo (${p.chips}). Abaixo de ${DEBT_LIMIT}, é expulso(a) da mesa!`, 'warn');
       }
+      if (p.chips >= 0) p.warnedDebt = false;
       p.bet = 0; p.betLocked = false; p.insurance = 0; p.insuranceAnswered = false;
       p.hands = []; p.roundNet = 0; p.status = 'active';
     });
@@ -245,7 +271,7 @@ function init(io, rooms, broadcastStats) {
     live(room).filter(p => p.isBot).forEach(bot => {
       later(room, 1200 + Math.random() * 3500, () => {
         if (room.phase !== 'BETTING' || bot.betLocked) return;
-        const opts = [10, 20, 50, 50, 100, 100, 200].filter(v => v <= bot.chips);
+        const opts = [10, 20, 50, 50, 100, 100, 200].filter(v => bot.chips <= 0 ? v <= 20 : v <= bot.chips);
         placeBet(room, bot, opts.length ? pick(opts) : MIN_BET);
       });
     });
@@ -255,7 +281,7 @@ function init(io, rooms, broadcastStats) {
     if (room.phase !== 'BETTING' || p.betLocked || p.status !== 'active' || p.gone) return false;
     amount = parseInt(amount, 10);
     if (!Number.isFinite(amount) || amount % 10 !== 0) return false;
-    if (amount < MIN_BET || amount > MAX_BET || amount > p.chips) return false;
+    if (amount < MIN_BET || amount > MAX_BET) return false;      // pode apostar no fiado (saldo negativo)
     p.bet = amount; p.chips -= amount; p.betLocked = true;
     broadcast(room);
     checkAllBet(room);
@@ -325,7 +351,7 @@ function init(io, rooms, broadcastStats) {
     if (room.phase !== 'INSURANCE' || !p.betLocked || p.insuranceAnswered) return;
     p.insuranceAnswered = true;
     const cost = p.bet / 2;
-    if (take && p.chips >= cost && !p.hands[0].bj) { p.chips -= cost; p.insurance = cost; }
+    if (take && !p.hands[0].bj) { p.chips -= cost; p.insurance = cost; }
     else if (take && p.hands[0].bj) { /* "even money" não tratado: já tem blackjack, segue sem seguro */ }
     broadcast(room);
     if (!pendingInsurance(room).length) {
@@ -398,10 +424,10 @@ function init(io, rooms, broadcastStats) {
     });
   }
 
-  function canDouble(p, h) { return h.cards.length === 2 && !h.splitAces && p.chips >= h.bet; }
+  function canDouble(p, h) { return h.cards.length === 2 && !h.splitAces; }
   function canSplit(p, h) {
     return p.hands.length < MAX_HANDS && h.cards.length === 2 && !h.splitAces &&
-      splitValue(h.cards[0].r) === splitValue(h.cards[1].r) && p.chips >= h.bet;
+      splitValue(h.cards[0].r) === splitValue(h.cards[1].r);
   }
   function canSurrender(p, h) { return p.hands.length === 1 && h.cards.length === 2 && !h.fromSplit && !h.acted; }
 
@@ -542,11 +568,28 @@ function init(io, rooms, broadcastStats) {
       });
       if (p.insurance > 0) net += dealerBJ ? p.insurance * 2 : -p.insurance;
       p.roundNet = net;
+      if (net > 0) { p.streak++; p.bestStreak = Math.max(p.bestStreak, p.streak); }
+      else if (net < 0) p.streak = 0;          // empate mantém a sequência
+      if (p.chips < DEBT_LIMIT) {
+        p.kick = true;
+        log(room, `💸 ${p.name} está em ${p.chips} fichas e será expulso(a) da mesa na próxima rodada.`, 'alert');
+      }
     });
 
     broadcast(room);
     const parts = live(room).filter(p => p.betLocked).map(p => `${p.name} ${p.roundNet > 0 ? '+' : ''}${p.roundNet}`);
     log(room, `📊 Resultado: ${dealerBJ ? 'Dealer com blackjack' : dBust ? 'Dealer estourou (' + dT + ')' : 'Dealer com ' + dT}${parts.length ? ' · ' + parts.join(' · ') : ''}`, 'result');
+
+    // sequência de vitórias: o Thrakk da segurança vem ver o que está acontecendo
+    const lucky = live(room).filter(p => p.betLocked && p.streak > SECURITY_STREAK).sort((a, b) => b.streak - a.streak)[0];
+    if (lucky) {
+      later(room, 1700, () => {
+        let phrase; do { phrase = pick(SECURITY_PHRASES); } while (phrase === room.lastPhrase && SECURITY_PHRASES.length > 1);
+        room.lastPhrase = phrase;
+        io.to(room.code).emit('bjSecurity', { id: lucky.id, name: lucky.name, streak: lucky.streak, phrase });
+        log(room, `🚨 ${lucky.name} venceu ${lucky.streak} rodadas seguidas! A segurança foi chamada.`, 'alert');
+      });
+    }
 
     countdown(room, RESULT_TIME, () => startBetting(room));
   }
@@ -747,7 +790,7 @@ function init(io, rooms, broadcastStats) {
       if (room.state === 'PLAYING') {
         broadcast(room);
         if (room.phase === 'BETTING') later(room, 1200 + Math.random() * 2500, () => {
-          if (room.phase === 'BETTING' && !bot.betLocked) placeBet(room, bot, pick([10, 20, 50, 100].filter(v => v <= bot.chips)) || MIN_BET);
+          if (room.phase === 'BETTING' && !bot.betLocked) placeBet(room, bot, pick([10, 20, 50, 100].filter(v => bot.chips <= 0 ? v <= 20 : v <= bot.chips)) || MIN_BET);
         });
       }
     });
