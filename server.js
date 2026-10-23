@@ -28,6 +28,7 @@ app.get('/', (_, res) => res.sendFile(path.join(__dirname, 'public', 'index.html
 // Rotas específicas para os jogos:
 app.get('/jogos/deducao', (_, res) => res.sendFile(path.join(__dirname, 'public', 'jogos', 'deducao', 'index.html')));
 app.get('/jogos/ludo', (_, res) => res.sendFile(path.join(__dirname, 'public', 'jogos', 'ludo', 'index.html')));
+app.get('/jogos/blackjack', (_, res) => res.sendFile(path.join(__dirname, 'public', 'jogos', 'blackjack', 'index.html')));
 app.get('/lore', (_, res) => res.sendFile(path.join(__dirname, 'public', 'lore', 'index.html')));
 app.get('/lore/', (_, res) => res.sendFile(path.join(__dirname, 'public', 'lore', 'index.html')));
 // Redireciona /portal/ pra raiz (caso alguém tenha o link antigo salvo)
@@ -48,6 +49,10 @@ setInterval(broadcastStats, 5000);
 // ============ LUDO ============
 const ludo = require('./jogos/ludo');
 ludo.init(io, rooms, broadcastStats);
+
+// ============ BLACKJACK ============
+const blackjack = require('./jogos/blackjack');
+blackjack.init(io, rooms, broadcastStats);
 
 // ============ BOTS ============
 const BOT_NAMES = ['Zorblax','Kryzzt','Vexnar','Quortan','Xyloph','Braxil','Nyzoth','Vrelka','Moxxi','Zarnak','Xerath','Quinlex','Nebulon','Kryon','Xylar','Vorlox','Zephyr','Quintar','Gorblax','Yvnar','Threxil','Praxx','Worvax','Hylax','Ulnar','Kryx','Vorn','Naxor','Zynthar','Morbius'];
@@ -163,7 +168,7 @@ io.on('connection', (socket) => {
     if (!clientId) return;
     for (const code in rooms) {
       const room = rooms[code];
-      if (room.gameType === 'L') continue; // Ludo cuida da própria reconexão (ludoIdentify)
+      if (room.gameType === 'L' || room.gameType === 'B') continue; // Ludo e Blackjack cuidam da própria reconexão
       const oldId = Object.keys(room.players).find(pid => 
         room.players[pid].clientId === clientId && room.players[pid].disconnected
       );
@@ -405,7 +410,7 @@ io.on('connection', (socket) => {
     const code = socket.currentRoom;
     if (!code || !rooms[code]) return;
     const room = rooms[code];
-    if (room.gameType === 'L') return; // o Ludo trata o próprio disconnect (jogos/ludo.js)
+    if (room.gameType === 'L' || room.gameType === 'B') return; // Ludo/Blackjack tratam o próprio disconnect (jogos/*.js)
     const p = room.players[socket.id];
     if (!p) return;
     p.disconnected = true;
