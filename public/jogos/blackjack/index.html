@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blackjack 21 - Estação Alpha</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🃏</text></svg>">
+  <link rel="stylesheet" href="game.css">
+  <link rel="stylesheet" href="/shared/avatar.css">
+  <link rel="stylesheet" href="/shared/crt-bg.css">
+</head>
+<body>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
+  <a href="/rimkerama/" class="back-btn" id="backBtn">← VOLTAR AO ARCADE</a>
+
+  <div class="container">
+
+    <!-- ============ TELA 1: SETUP ============ -->
+    <div id="setupView" class="panel">
+      <div class="header-title">
+        <h1>🃏 BLACKJACK 21 🃏</h1>
+        <p class="subtitle">MESA DE CARTAS DA ESTAÇÃO ALPHA</p>
+      </div>
+
+      <div class="setup-profile">
+        <div style="text-align:center;">
+          <div class="avatar-box" id="avatarPreview"></div>
+          <small style="color:var(--matrix-green);">Seu personagem</small>
+        </div>
+        <div>
+          <label>Nome do Tripulante:</label>
+          <input type="text" id="username" placeholder="Digite seu apelido..." maxlength="16">
+        </div>
+      </div>
+
+      <hr class="sep">
+
+      <div class="action-menu">
+        <button id="btnMenuCreate" onclick="toggleForm('create')">➕ CRIAR MESA</button>
+        <button id="btnMenuJoin" onclick="toggleForm('join')">🚪 ENTRAR EM MESA</button>
+      </div>
+
+      <div id="formCreate" class="hidden-form">
+        <h4 class="form-title">⚙ CONFIGURAÇÃO DA MESA</h4>
+        <label>Lugares na mesa:</label>
+        <select id="maxPlayersInput" style="margin-bottom:10px;">
+          <option value="1">1 jogador (sozinho)</option>
+          <option value="2">2 jogadores</option>
+          <option value="3">3 jogadores</option>
+          <option value="4" selected>4 jogadores</option>
+        </select>
+        <p class="form-hint">Você pode começar sozinho, com bots, ou esperar os amigos. Quem tem lugar livre pode entrar até no meio da partida.</p>
+        <button id="btnCreate" onclick="createRoom()" class="btn-wide" style="background:#446600;">GERAR CÓDIGO DA MESA</button>
+      </div>
+
+      <div id="formJoin" class="hidden-form">
+        <h4 class="form-title">📡 ENTRAR EM MESA</h4>
+        <label>Código (4 letras):</label>
+        <input type="text" id="roomCodeInput" placeholder="EX: ABCF" class="code-input" maxlength="4">
+        <button onclick="joinRoom()" class="btn-wide" style="background:#003366; border-color:#0088cc; margin-bottom:20px;">CONECTAR POR CÓDIGO</button>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <small style="color:var(--cyan-glow); letter-spacing:2px;">OU ENTRE EM UMA MESA ABERTA:</small>
+          <button onclick="refreshRoomsList()" style="padding:4px 10px; font-size:0.75em; background:#112200;">🔄 ATUALIZAR</button>
+        </div>
+        <div id="roomsListBox" class="rooms-list-box"><p class="rooms-empty">Carregando mesas...</p></div>
+      </div>
+
+      <details class="rules-box">
+        <summary>📖 REGRAS DA MESA</summary>
+        <ul>
+          <li>Chegue o mais perto de <b>21</b> sem passar. Quem passa de 21 <b>estoura</b> e perde.</li>
+          <li>Ás vale 1 ou 11. Figuras (J, Q, K) valem 10.</li>
+          <li><b>Blackjack</b> (Ás + 10 nas 2 primeiras cartas) paga <b>3:2</b>. Vitória paga 1:1. Empate devolve a aposta.</li>
+          <li>O Dealer compra até 16 e <b>para em qualquer 17</b>.</li>
+          <li><b>Dobrar:</b> dobra a aposta, recebe só mais 1 carta. <b>Dividir:</b> pares viram 2 mãos (até 4).</li>
+          <li><b>Seguro:</b> se o Dealer mostra um Ás, aposte metade para se proteger de blackjack (paga 2:1).</li>
+          <li><b>Desistir:</b> na 1ª decisão, recupera metade da aposta.</li>
+          <li>Todo mundo começa com 🪙 1000. Aposta de 10 a 500. Zerou? Você ganha fichas novas.</li>
+        </ul>
+      </details>
+    </div>
+
+    <!-- ============ TELA 2: LOBBY ============ -->
+    <div id="lobbyView" class="panel" style="display:none;">
+      <div class="lobby-top">
+        <div>
+          <h3>CÓDIGO: <span class="code-display" id="displayRoomCode">----</span></h3>
+          <p style="color:var(--cyan-glow); margin:0;">Compartilhe para os tripulantes sentarem à mesa!</p>
+        </div>
+        <div style="text-align:right;">
+          <h4 style="margin:0;">JOGADORES: <span id="queueCount">0 / 4</span></h4>
+        </div>
+      </div>
+
+      <hr class="sep">
+      <div id="lobbyGrid" class="lobby-grid"></div>
+
+      <div class="chat-panel-lobby">
+        <h4 style="margin-top:0; color:var(--cyan-glow);">💬 CHAT</h4>
+        <div id="lobbyChatBox" class="chat-box" style="height:120px;"></div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <input type="text" id="lobbyChatInput" placeholder="Converse..." maxlength="200">
+          <button onclick="sendChat('lobbyChatInput')" style="white-space:nowrap;">ENVIAR</button>
+        </div>
+      </div>
+
+      <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="btnStart" onclick="startGame()" style="flex:1; min-width:200px; background:#558800; display:none;">🚀 ABRIR A MESA (HOST)</button>
+        <button id="btnAddBot" onclick="addBot()" style="flex:1; min-width:160px; background:#221144; border-color:var(--ghost-purple); color:var(--ghost-purple); display:none;">🤖 ADICIONAR BOT</button>
+        <button id="btnRemoveBot" onclick="removeBot()" style="flex:1; min-width:160px; background:#441122; border-color:var(--alert-red); color:var(--alert-red); display:none;">❌ REMOVER BOT</button>
+        <button onclick="leaveTable()" style="flex:1; min-width:160px; background:#220a0a; border-color:#884444; color:#ff9999;">🚪 SAIR</button>
+      </div>
+      <p id="lobbyHint" class="hint-line"></p>
+    </div>
+
+    <!-- ============ TELA 3: MESA ============ -->
+    <div id="gameView" style="display:none;">
+
+      <div class="game-top-bar">
+        <div class="top-left">
+          <span class="chip-code">MESA <b id="gvCode">----</b></span>
+          <span class="top-round">Rodada <b id="gvRound">0</b></span>
+          <span class="shoe" title="Cartas restantes no baralho"><span class="shoe-bar"><i id="shoeFill"></i></span><small id="shoeTxt">312</small></span>
+        </div>
+        <div class="top-mid"><span id="phaseLabel" class="phase-label">—</span></div>
+        <div class="top-right">
+          <button id="btnAddBotG" class="mini-btn" onclick="addBot()" style="display:none;">🤖 +BOT</button>
+          <button id="btnRemoveBotG" class="mini-btn" onclick="removeBot()" style="display:none;">🤖 −BOT</button>
+          <button class="mini-btn danger" onclick="leaveTable()">🚪 SAIR</button>
+          <span class="timer-badge" id="gvTimer">--</span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <div class="table-col">
+          <div class="felt" id="felt">
+            <div class="dealer-zone">
+              <div class="zone-label">🛸 DEALER</div>
+              <div class="cards" id="dealerCards"></div>
+              <div class="hand-info" id="dealerInfo"></div>
+            </div>
+            <div class="felt-rule">O DEALER PARA EM 17 · BLACKJACK PAGA 3:2 · SEGURO PAGA 2:1</div>
+            <div id="seats" class="seats"></div>
+            <div id="resultBanner" class="result-banner"></div>
+          </div>
+
+          <div class="panel controls" id="controls"></div>
+        </div>
+
+        <div class="side-col">
+          <div class="panel chat-panel">
+            <h3>📜 MESA &amp; CHAT</h3>
+            <div id="gameChatBox" class="chat-box" style="height:260px;"></div>
+            <div style="display:flex; gap:5px; margin-top:8px;">
+              <input type="text" id="gameChatInput" placeholder="Mensagem..." maxlength="200">
+              <button onclick="sendChat('gameChatInput')">➤</button>
+            </div>
+          </div>
+          <div class="panel stats-panel">
+            <h3>🏆 SUAS ESTATÍSTICAS</h3>
+            <div id="statsBox" class="stats-box"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/shared/avatar.js"></script>
+  <script src="/shared/conta.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
