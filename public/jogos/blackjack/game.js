@@ -577,6 +577,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const name = getStoredName();
   if (name) { const input = $('username'); if (input) input.value = name; }
   updatePreview();
+  // a conta carrega depois da página: repinta o personagem assim que o avatar chegar
+  if (window.Conta && Conta.ready && Conta.ready.then) Conta.ready.then(() => { updatePreview(); if (S) renderTable(S); }).catch(() => {});
   $('soundToggle').innerText = soundEnabled ? '🔊' : '🔇';
   document.addEventListener('click', () => initAudio(), { once: true });
   ['lobbyChatInput', 'gameChatInput'].forEach(id => {
