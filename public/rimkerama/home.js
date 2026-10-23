@@ -150,7 +150,9 @@ function openProfileModal() {
   if (statsBox && statsBoxContainer) {
     let h = [];
     try { h = JSON.parse(localStorage.getItem('alpha_history') || '[]'); } catch (e) {}
-    if (h.length) {
+    let hasBj = false;
+    try { hasBj = (JSON.parse(localStorage.getItem('alpha_bj_stats') || '{}').rounds || 0) > 0; } catch (e) {}
+    if (h.length || hasBj) {
       statsBoxContainer.style.display = 'block';
       renderProfileHistory(statsBox, h);
     } else {
@@ -173,6 +175,9 @@ function renderProfileHistory(el, h) {
   });
 
   const g = buildStats(h);
+  let bj = {};
+  try { bj = JSON.parse(localStorage.getItem('alpha_bj_stats') || '{}'); } catch (e) {}
+  const bjRounds = bj.rounds || 0, bjWins = bj.wins || 0;
   const d = buildStats(deducao);
   const l = buildStats(ludo);
 
@@ -192,7 +197,7 @@ function renderProfileHistory(el, h) {
     <div class="history-section">
       <div class="history-group-title">🌌 GERAL</div>
       <div class="history-stats">
-        <div class="history-stat"><b>${g.wins}/${g.total}</b><small>VITÓRIAS</small></div>
+        <div class="history-stat"><b>${g.wins + bjWins}/${g.total + bjRounds}</b><small>VITÓRIAS</small></div>
       </div>
     </div>
 
@@ -213,6 +218,16 @@ function renderProfileHistory(el, h) {
         <div class="history-stat"><b>${ludoWB}/${ludoB.length}</b><small>MODO B</small></div>
       </div>
     </div>
+
+    ${bjRounds ? `
+    <div class="history-section">
+      <div class="history-group-title">🃏 BLACKJACK 21</div>
+      <div class="history-stats">
+        <div class="history-stat"><b>${bjWins}/${bjRounds}</b><small>RODADAS</small></div>
+        <div class="history-stat"><b>${bj.blackjacks || 0}</b><small>BLACKJACKS</small></div>
+        <div class="history-stat"><b>${bj.peak || 0}</b><small>PICO DE FICHAS</small></div>
+      </div>
+    </div>` : ''}
   `;
 }
 
